@@ -491,6 +491,23 @@ h1 {
   text-align: center;
 }
 
+/* Touch-friendly optimizations */
+@media (any-pointer: coarse) {
+  button,
+  a,
+  [role="button"],
+  input,
+  select {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  input,
+  select {
+    font-size: 16px;
+  }
+}
+
 .slot.miss,
 .piece.miss {
   border-color: var(--rose);
@@ -691,5 +708,407 @@ h1 {
   .current-image img {
     width: 78px;
     height: 58px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-shell {
+    width: calc(100% - 14px);
+    padding: 10px 0 16px;
+  }
+
+  .top-bar {
+    gap: 10px;
+    padding: 2px 0 12px;
+    flex-direction: column;
+  }
+
+  .eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.8rem;
+  }
+
+  h1 {
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+
+  .stat {
+    min-width: auto;
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+
+  .stat span {
+    font-size: 0.7rem;
+  }
+
+  .stat strong {
+    margin-top: 3px;
+    font-size: 1rem;
+  }
+
+  .game-layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .side-panel {
+    display: grid;
+    gap: 12px;
+    padding: 10px;
+    position: static;
+    border-radius: 6px;
+  }
+
+  .panel-section {
+    gap: 8px;
+  }
+
+  .section-head,
+  .section-label {
+    font-size: 0.8rem;
+  }
+
+  .image-picker {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .image-choice {
+    grid-template-columns: 60px minmax(0, 1fr) 18px;
+    gap: 8px;
+    min-height: 66px;
+    padding: 6px;
+    border-radius: 6px;
+  }
+
+  .image-choice img {
+    width: 60px;
+    height: 48px;
+    border-radius: 4px;
+  }
+
+  .image-choice strong {
+    font-size: 0.85rem;
+  }
+
+  .image-choice span {
+    font-size: 0.7rem;
+  }
+
+  .segmented {
+    grid-template-columns: repeat(3, 1fr);
+    border-radius: 6px;
+    gap: 0;
+  }
+
+  .segment {
+    min-height: 36px;
+    border-radius: 0;
+    border-left: 1px solid var(--line);
+    font-size: 0.75rem;
+  }
+
+  .segment:first-child {
+    border-left: 0;
+    border-radius: 6px 0 0 6px;
+  }
+
+  .segment:last-child {
+    border-radius: 0 6px 6px 0;
+  }
+
+  .actions {
+    gap: 8px;
+  }
+
+  .primary-button,
+  .ghost-button {
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+  }
+
+  .primary-button svg,
+  .ghost-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .icon-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+  }
+
+  .board-zone {
+    gap: 10px;
+  }
+
+  .puzzle-stage {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .board-shell {
+    padding: 6px;
+    border-radius: 6px;
+  }
+
+  .board {
+    max-width: 100%;
+    padding: 3px;
+  }
+
+  .slot {
+    border-radius: 0;
+  }
+
+  .piece-tray {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    max-height: 280px;
+    padding: 6px;
+    border-radius: 6px;
+  }
+
+  .piece {
+    border-radius: 4px;
+  }
+
+  .current-image {
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 8px;
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .current-image img {
+    width: 54px;
+    height: 42px;
+    border-radius: 4px;
+  }
+
+  .current-image span {
+    font-size: 0.7rem;
+  }
+
+  .current-image strong {
+    font-size: 0.9rem;
+  }
+
+  .section-head {
+    gap: 8px;
+  }
+
+  .section-head strong {
+    font-size: 0.85rem;
+  }
+
+  .preview-dialog {
+    width: calc(100% - 16px);
+    border-radius: 6px;
+  }
+
+  .dialog-head {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .win-toast {
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    bottom: 12px;
+  }
+
+  .pieces-empty {
+    min-height: 100px;
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .app-shell {
+    width: calc(100% - 12px);
+    padding: 8px 0 12px;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+  }
+
+  h1 {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .stat {
+    padding: 6px 8px;
+    border-radius: 4px;
+  }
+
+  .stat span {
+    font-size: 0.65rem;
+  }
+
+  .stat strong {
+    font-size: 0.9rem;
+  }
+
+  .side-panel {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .section-head,
+  .section-label {
+    font-size: 0.75rem;
+  }
+
+  .panel-section {
+    gap: 6px;
+  }
+
+  .image-picker {
+    gap: 6px;
+  }
+
+  .image-choice {
+    grid-template-columns: 48px minmax(0, 1fr) 16px;
+    gap: 6px;
+    min-height: 56px;
+    padding: 4px;
+    border-radius: 4px;
+  }
+
+  .image-choice img {
+    width: 48px;
+    height: 38px;
+    border-radius: 3px;
+  }
+
+  .image-choice strong {
+    font-size: 0.78rem;
+  }
+
+  .image-choice span {
+    font-size: 0.65rem;
+  }
+
+  .image-choice .check {
+    width: 18px;
+    height: 18px;
+  }
+
+  .segment {
+    min-height: 32px;
+    font-size: 0.7rem;
+  }
+
+  .actions {
+    gap: 6px;
+  }
+
+  .primary-button,
+  .ghost-button {
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  .primary-button svg,
+  .ghost-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .icon-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+  }
+
+  .board-shell {
+    padding: 4px;
+    border-radius: 4px;
+  }
+
+  .board {
+    padding: 2px;
+    border-radius: 6px;
+  }
+
+  .piece-tray {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    max-height: 240px;
+    padding: 4px;
+    border-radius: 4px;
+  }
+
+  .piece {
+    border-radius: 3px;
+  }
+
+  .current-image {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 6px;
+    padding: 6px;
+    border-radius: 4px;
+  }
+
+  .current-image img {
+    width: 44px;
+    height: 34px;
+    border-radius: 3px;
+  }
+
+  .current-image span {
+    font-size: 0.65rem;
+  }
+
+  .current-image strong {
+    font-size: 0.8rem;
+  }
+
+  .preview-dialog {
+    width: calc(100% - 12px);
+    border-radius: 4px;
+  }
+
+  .dialog-head {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .win-toast {
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    bottom: 10px;
+    gap: 6px;
+  }
+
+  .pieces-empty {
+    min-height: 80px;
+    padding: 8px;
+    font-size: 0.72rem;
   }
 }

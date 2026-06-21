@@ -23,12 +23,15 @@ html {
   width: 100%;
   overflow-x: hidden;
   color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body.game-page {
   width: 100%;
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100svh;
   overflow-x: hidden;
   color: var(--game-text);
   font-family: "Vazirmatn", Tahoma, "Segoe UI", sans-serif;
@@ -222,6 +225,26 @@ body.game-page input {
 .game-page :focus-visible {
   outline: 3px solid var(--game-yellow) !important;
   outline-offset: 3px !important;
+}
+
+/* Touch-friendly optimizations */
+@media (any-pointer: coarse) {
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }
 
 /* Shared page headers */
@@ -748,6 +771,14 @@ body.game-page input {
 }
 
 @media (max-width: 680px) {
+  body.game-page {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .game-nav {
+    padding-top: env(safe-area-inset-top);
+  }
+
   .game-nav-inner {
     grid-template-columns: auto 1fr;
     width: min(100% - 20px, 1220px);
@@ -770,6 +801,7 @@ body.game-page input {
 
   .game-switch {
     min-width: 0;
+    min-height: 44px;
     padding-inline: 7px;
   }
 
@@ -797,6 +829,18 @@ body.game-page input {
     min-width: 0;
   }
 
+  .game-piano .metrics,
+  .game-puzzle .stats {
+    width: 100%;
+  }
+
+  .game-piano .control-strip > *,
+  .game-piano .field,
+  .game-piano select {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .game-piano .control-strip {
     border-radius: 16px;
   }
@@ -806,8 +850,17 @@ body.game-page input {
   }
 
   .game-memory .toolbar {
-    justify-content: flex-start;
-    width: fit-content;
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .game-memory .toolbar .mode-button {
+    flex: 1 1 auto;
+  }
+
+  .game-memory .icon-button,
+  .game-memory .mode-button {
+    min-height: 46px;
   }
 
   .game-memory .score-strip {
@@ -823,6 +876,28 @@ body.game-page input {
     grid-template-columns: 1fr;
   }
 
+  .game-memory .board-wrap {
+    padding: 8px;
+  }
+
+  .game-memory .board {
+    gap: 7px;
+  }
+
+  .game-memory .card,
+  .game-memory .card-inner,
+  .game-memory .card-face {
+    border-radius: 11px;
+  }
+
+  .game-memory .card-title {
+    inset-inline: 4px;
+    inset-block-end: 4px;
+    min-height: 26px;
+    padding: 3px 4px;
+    font-size: clamp(0.55rem, 2.7vw, 0.72rem);
+  }
+
   .game-memory .score-card,
   .game-memory .status-card,
   .game-memory .panel {
@@ -831,6 +906,11 @@ body.game-page input {
 
   .game-puzzle .side-panel {
     top: auto;
+  }
+
+  .game-puzzle .primary-button,
+  .game-puzzle .ghost-button {
+    min-height: 46px;
   }
 }
 
@@ -846,8 +926,9 @@ body.game-page input {
   }
 
   .game-switch {
-    gap: 5px;
-    min-height: 37px;
+    gap: 4px;
+    min-height: 44px;
+    padding-inline: 4px;
     border-radius: 10px;
     font-size: 0.68rem;
   }
@@ -874,6 +955,50 @@ body.game-page input {
 
   .game-memory .meta-value {
     font-size: 0.92rem;
+  }
+
+  .game-memory .score-card {
+    padding: 12px 11px;
+  }
+
+  .game-memory .score-label,
+  .game-memory .meta-label {
+    font-size: 0.7rem;
+  }
+
+  .game-memory .score-value {
+    font-size: 1.2rem;
+  }
+
+  .game-memory .board {
+    gap: 5px;
+  }
+
+  .game-memory .card,
+  .game-memory .card-inner,
+  .game-memory .card-face {
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .game-nav-inner {
+    width: calc(100% - 14px);
+    gap: 6px;
+  }
+
+  .game-brand-mark {
+    width: 35px;
+    height: 35px;
+  }
+
+  .game-switch b {
+    font-size: 0.64rem;
+  }
+
+  .game-page .app-shell,
+  .game-page .app {
+    width: calc(100% - 14px);
   }
 }
 

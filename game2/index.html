@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>بازی حافظه شکارچیان شیاطین کی‌پاپ</title>
     <style>
       :root {
@@ -495,6 +495,23 @@
 
         .side-panel {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      /* Touch-friendly optimizations */
+      @media (any-pointer: coarse) {
+        button,
+        a,
+        [role="button"],
+        input,
+        select {
+          min-height: 44px;
+          touch-action: manipulation;
+        }
+
+        input,
+        select {
+          font-size: 16px;
         }
       }
 

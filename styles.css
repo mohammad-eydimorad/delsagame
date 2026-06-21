@@ -33,12 +33,16 @@ body {
   width: 100%;
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100svh;
   overflow-x: hidden;
   color: var(--text);
   background:
     radial-gradient(circle at 75% 12%, rgba(125, 80, 255, 0.16), transparent 28rem),
     radial-gradient(circle at 15% 38%, rgba(255, 60, 151, 0.09), transparent 24rem),
     var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body::before {
@@ -968,6 +972,26 @@ main,
   outline-offset: 4px;
 }
 
+/* Touch-friendly and mobile optimizations */
+@media (any-pointer: coarse) {
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 @media (max-width: 980px) {
   .hero {
     grid-template-columns: 1fr;
@@ -1015,6 +1039,7 @@ main,
 
   .site-header {
     min-height: 76px;
+    padding-top: env(safe-area-inset-top);
   }
 
   .header-note {
@@ -1027,7 +1052,7 @@ main,
 
   .hero {
     gap: 30px;
-    padding: 52px 0 54px;
+    padding: 42px 0 48px;
   }
 
   .hero h1 {
@@ -1041,34 +1066,46 @@ main,
   .hero-actions {
     align-items: flex-start;
     flex-direction: column;
+    gap: 16px;
   }
 
   .hero-visual {
-    min-height: 355px;
-    transform: scale(0.88);
-    transform-origin: top center;
-    margin-bottom: -42px;
+    width: min(100%, 520px);
+    min-height: clamp(300px, 84vw, 390px);
+    margin-inline: auto;
+    transform: none;
   }
 
   .visual-piano {
-    right: 26px;
-    width: 250px;
+    top: 2%;
+    right: 7%;
+    width: 56%;
+    height: 42%;
+    padding: 20px;
+    border-radius: 22px;
   }
 
   .visual-memory {
-    left: 8px;
-    width: 160px;
-    height: 215px;
+    top: 31%;
+    left: 1%;
+    width: 37%;
+    height: 57%;
+    border-radius: 23px;
   }
 
   .visual-puzzle {
-    right: 78px;
-    width: 203px;
-    height: 170px;
+    right: 17%;
+    bottom: 0;
+    width: 47%;
+    height: 43%;
+    border-radius: 23px;
   }
 
   .hero-badge {
-    left: 105px;
+    top: 19%;
+    left: 28%;
+    min-width: 96px;
+    padding: 8px 10px;
   }
 
   .games-section {
@@ -1109,6 +1146,18 @@ main,
     padding: 21px;
   }
 
+  .game-card {
+    border-radius: 21px;
+  }
+
+  .card-art {
+    height: clamp(210px, 62vw, 280px);
+  }
+
+  .puzzle-card .card-art {
+    height: clamp(210px, 62vw, 280px);
+  }
+
   .banner-stars {
     display: none;
   }
@@ -1125,10 +1174,9 @@ main,
   .hero-visual {
     width: 100%;
     max-width: 390px;
-    transform: scale(0.72);
-    transform-origin: top center;
-    margin-top: -8px;
-    margin-bottom: -99px;
+    min-height: 280px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .primary-link {
@@ -1137,12 +1185,58 @@ main,
 
   .family-banner {
     gap: 12px;
+    padding: 18px 15px;
   }
 
   .banner-icon {
     width: 42px;
     height: 42px;
     border-radius: 13px;
+  }
+
+  .brand-copy strong {
+    font-size: 0.84rem;
+  }
+
+  .brand-copy small {
+    font-size: 0.65rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.45rem, 14vw, 3.7rem);
+  }
+
+  .hero-description {
+    font-size: 0.94rem;
+  }
+
+  .visual-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mini-keys {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    height: 42px;
+  }
+
+  .hero-badge {
+    left: 24%;
+    transform: scale(0.88);
+  }
+
+  .card-content {
+    padding: 18px 17px 17px;
+  }
+
+  .card-title-row h3 {
+    font-size: 1.25rem;
+  }
+
+  .site-footer {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 

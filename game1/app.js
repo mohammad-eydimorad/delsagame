@@ -503,12 +503,14 @@ function drawBackground(width, height) {
     ctx.lineTo(x + 0.5, height);
     ctx.stroke();
 
-    ctx.fillStyle = note.kind === "black" ? "rgba(255,255,255,0.58)" : "rgba(255,255,255,0.78)";
-    ctx.font = "700 12px Tahoma, Segoe UI, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.direction = "ltr";
-    ctx.fillText(note.name.replace("#", "♯"), x + laneWidth / 2, height - 22);
+    if (laneWidth >= 24) {
+      ctx.fillStyle = note.kind === "black" ? "rgba(255,255,255,0.58)" : "rgba(255,255,255,0.78)";
+      ctx.font = "700 12px Tahoma, Segoe UI, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.direction = "ltr";
+      ctx.fillText(note.name.replace("#", "♯"), x + laneWidth / 2, height - 22);
+    }
   });
 
   ctx.strokeStyle = "rgba(232, 166, 35, 0.72)";
@@ -569,8 +571,8 @@ function drawGameNotes(now, width, height) {
     const noteIndex = NOTES.findIndex((note) => note.name === event.noteName);
     const note = noteByName.get(event.noteName);
     const y = hitY - (event.time - now) * fallSpeed;
-    const noteWidth = Math.max(24, laneWidth * 0.72);
-    const noteHeight = Math.max(28, Math.min(42, laneWidth * 0.86));
+    const noteWidth = Math.max(12, laneWidth * 0.72);
+    const noteHeight = Math.max(20, Math.min(42, laneWidth * 0.86));
 
     if (y < -noteHeight || y > height + noteHeight) return;
 
@@ -586,7 +588,7 @@ function drawGameNotes(now, width, height) {
     ctx.shadowBlur = 0;
 
     ctx.fillStyle = "rgba(255,255,255,0.92)";
-    ctx.font = "800 12px Tahoma, Segoe UI, sans-serif";
+    ctx.font = `800 ${laneWidth < 24 ? 9 : 12}px Tahoma, Segoe UI, sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.direction = "ltr";
