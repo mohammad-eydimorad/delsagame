@@ -493,6 +493,7 @@ h1 {
 
 /* Touch-friendly optimizations */
 @media (any-pointer: coarse) {
+
   button,
   a,
   [role="button"],
@@ -515,6 +516,7 @@ h1 {
 }
 
 @keyframes miss-shake {
+
   0%,
   100% {
     transform: translateX(0);

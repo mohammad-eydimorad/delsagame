@@ -1,771 +1,776 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>بازی حافظه شکارچیان شیاطین کی‌پاپ</title>
-    <style>
-      :root {
-        --ink: #18202a;
-        --muted: #667085;
-        --paper: #fffaf1;
-        --panel: #ffffff;
-        --line: #d9dee7;
-        --rose: #ef476f;
-        --violet: #6f4cc3;
-        --aqua: #00a6a6;
-        --gold: #f6c85f;
-        --green: #2aa876;
-        --shadow: 0 18px 45px rgba(24, 32, 42, 0.16);
-      }
 
-      * {
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>بازی حافظه شکارچیان شیاطین کی‌پاپ</title>
+  <style>
+    :root {
+      --ink: #18202a;
+      --muted: #667085;
+      --paper: #fffaf1;
+      --panel: #ffffff;
+      --line: #d9dee7;
+      --rose: #ef476f;
+      --violet: #6f4cc3;
+      --aqua: #00a6a6;
+      --gold: #f6c85f;
+      --green: #2aa876;
+      --shadow: 0 18px 45px rgba(24, 32, 42, 0.16);
+    }
 
-      body {
-        margin: 0;
-        min-height: 100vh;
-        color: var(--ink);
-        font-family:
-          Vazirmatn,
-          "Segoe UI",
-          Tahoma,
-          Arial,
-          sans-serif;
-        background:
-          linear-gradient(135deg, rgba(246, 200, 95, 0.22), transparent 36%),
-          linear-gradient(315deg, rgba(0, 166, 166, 0.18), transparent 34%),
-          var(--paper);
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      button {
-        font: inherit;
-      }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family:
+        Vazirmatn,
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+      background:
+        linear-gradient(135deg, rgba(246, 200, 95, 0.22), transparent 36%),
+        linear-gradient(315deg, rgba(0, 166, 166, 0.18), transparent 34%),
+        var(--paper);
+    }
 
-      .app {
-        width: min(1180px, calc(100% - 32px));
-        min-height: 100vh;
-        margin: 0 auto;
-        padding: 24px 0 34px;
-        display: grid;
-        grid-template-rows: auto auto 1fr;
-        gap: 18px;
-      }
+    button {
+      font: inherit;
+    }
 
-      .topbar {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 16px;
-        align-items: end;
-      }
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 24px 0 34px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 18px;
+    }
 
-      .title-block {
-        min-width: 0;
-      }
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
+    }
 
-      .eyebrow {
-        margin: 0 0 8px;
-        color: var(--violet);
-        font-size: clamp(0.82rem, 1.7vw, 0.95rem);
-        font-weight: 800;
-      }
+    .title-block {
+      min-width: 0;
+    }
 
-      h1 {
-        margin: 0;
-        font-size: clamp(1.6rem, 4vw, 3.2rem);
-        line-height: 1.1;
-        letter-spacing: 0;
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--violet);
+      font-size: clamp(0.82rem, 1.7vw, 0.95rem);
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 4vw, 3.2rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .icon-button,
+    .home-button,
+    .mode-button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: 0 8px 20px rgba(24, 32, 42, 0.08);
+      cursor: pointer;
+      transition:
+        transform 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    .icon-button {
+      width: 46px;
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .home-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 13px;
+      color: var(--violet);
+      font-size: 0.82rem;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .mode-button {
+      padding: 0 14px;
+      font-weight: 800;
+    }
+
+    .icon-button:hover,
+    .home-button:hover,
+    .mode-button:hover {
+      transform: translateY(-1px);
+      border-color: #aeb7c6;
+      box-shadow: 0 12px 26px rgba(24, 32, 42, 0.12);
+    }
+
+    .icon-button svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .score-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .score-card,
+    .status-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(24, 32, 42, 0.08);
+      min-width: 0;
+    }
+
+    .score-card {
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-card::before {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
+      width: 6px;
+      background: var(--player-color);
+    }
+
+    .score-card.is-active {
+      border-color: var(--player-color);
+      box-shadow: 0 14px 34px color-mix(in srgb, var(--player-color) 22%, transparent);
+    }
+
+    .score-label,
+    .meta-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .score-value {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 6px;
+      font-weight: 900;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+    }
+
+    .score-value span:last-child {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .status-card {
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+
+    .meta-value {
+      display: block;
+      margin-top: 5px;
+      font-weight: 900;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      white-space: nowrap;
+    }
+
+    .game-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 290px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .board-wrap {
+      padding: 14px;
+      background:
+        linear-gradient(135deg, rgba(239, 71, 111, 0.12), transparent 32%),
+        linear-gradient(315deg, rgba(111, 76, 195, 0.12), transparent 28%),
+        rgba(255, 255, 255, 0.74);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .board {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      perspective: 900px;
+      cursor: pointer;
+    }
+
+    .card:disabled {
+      cursor: default;
+    }
+
+    .card:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      transform-style: preserve-3d;
+      transition: transform 320ms ease;
+    }
+
+    .card.is-flipped .card-inner,
+    .card.is-matched .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 8px;
+      backface-visibility: hidden;
+      border: 1px solid rgba(24, 32, 42, 0.18);
+    }
+
+    .card-back {
+      background:
+        linear-gradient(135deg, rgba(24, 32, 42, 0.88), rgba(24, 32, 42, 0.68)),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.08) 0 8px, transparent 8px 16px);
+      color: #fff;
+    }
+
+    .card-mark {
+      width: 58%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+    }
+
+    .card-mark svg {
+      width: 54%;
+      height: 54%;
+      stroke: #fff;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+      background: #111722;
+    }
+
+    .card-front svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-title {
+      position: absolute;
+      inset-inline: 10px;
+      inset-block-end: 10px;
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: rgba(17, 23, 34, 0.78);
+      color: #fff;
+      font-size: 0.86rem;
+      font-weight: 900;
+      line-height: 1.35;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .card.is-matched .card-front {
+      border-color: var(--green);
+      box-shadow: inset 0 0 0 4px rgba(42, 168, 118, 0.28);
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .panel {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 12px 30px rgba(24, 32, 42, 0.08);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .characters {
+      display: grid;
+      gap: 10px;
+    }
+
+    .character-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .mini {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(24, 32, 42, 0.12);
+      background: var(--mini-bg);
+      overflow: hidden;
+    }
+
+    .mini svg,
+    .mini img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .mini img {
+      object-fit: cover;
+    }
+
+    .character-name {
+      display: block;
+      font-weight: 900;
+    }
+
+    .character-count {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
+    .log {
+      display: grid;
+      gap: 8px;
+    }
+
+    .log-line {
+      min-height: 34px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      background: rgba(24, 32, 42, 0.06);
+      color: #344054;
+      font-size: 0.86rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .winner {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      place-items: center;
+      padding: 22px;
+      background: rgba(24, 32, 42, 0.46);
+    }
+
+    .winner.is-open {
+      display: grid;
+    }
+
+    .winner-box {
+      width: min(430px, 100%);
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: #fff;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .winner-box h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.45rem, 5vw, 2.2rem);
+    }
+
+    .winner-box p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .primary-button {
+      min-height: 44px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+
+      .topbar,
+      .game-shell {
+        grid-template-columns: 1fr;
       }
 
       .toolbar {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-      }
-
-      .icon-button,
-      .home-button,
-      .mode-button {
-        min-height: 44px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        color: var(--ink);
-        box-shadow: 0 8px 20px rgba(24, 32, 42, 0.08);
-        cursor: pointer;
-        transition:
-          transform 160ms ease,
-          border-color 160ms ease,
-          box-shadow 160ms ease;
-      }
-
-      .icon-button {
-        width: 46px;
-        display: inline-grid;
-        place-items: center;
-      }
-
-      .home-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 0 13px;
-        color: var(--violet);
-        font-size: 0.82rem;
-        font-weight: 900;
-        text-decoration: none;
-      }
-
-      .mode-button {
-        padding: 0 14px;
-        font-weight: 800;
-      }
-
-      .icon-button:hover,
-      .home-button:hover,
-      .mode-button:hover {
-        transform: translateY(-1px);
-        border-color: #aeb7c6;
-        box-shadow: 0 12px 26px rgba(24, 32, 42, 0.12);
-      }
-
-      .icon-button svg {
-        width: 20px;
-        height: 20px;
-        stroke: currentColor;
-        stroke-width: 2;
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-
-      .score-strip {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .score-card,
-      .status-card {
-        background: rgba(255, 255, 255, 0.82);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        box-shadow: 0 12px 32px rgba(24, 32, 42, 0.08);
-        min-width: 0;
-      }
-
-      .score-card {
-        padding: 14px 16px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .score-card::before {
-        content: "";
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        width: 6px;
-        background: var(--player-color);
-      }
-
-      .score-card.is-active {
-        border-color: var(--player-color);
-        box-shadow: 0 14px 34px color-mix(in srgb, var(--player-color) 22%, transparent);
-      }
-
-      .score-label,
-      .meta-label {
-        display: block;
-        color: var(--muted);
-        font-size: 0.84rem;
-        font-weight: 700;
-      }
-
-      .score-value {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-        margin-top: 6px;
-        font-weight: 900;
-        font-size: clamp(1.35rem, 3vw, 2rem);
-      }
-
-      .score-value span:last-child {
-        color: var(--muted);
-        font-size: 0.86rem;
-        font-weight: 700;
-      }
-
-      .status-card {
-        padding: 14px 16px;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        align-items: center;
-      }
-
-      .meta-value {
-        display: block;
-        margin-top: 5px;
-        font-weight: 900;
-        font-size: clamp(1rem, 2vw, 1.2rem);
-        white-space: nowrap;
-      }
-
-      .game-shell {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 290px;
-        gap: 18px;
-        align-items: start;
-      }
-
-      .board-wrap {
-        padding: 14px;
-        background:
-          linear-gradient(135deg, rgba(239, 71, 111, 0.12), transparent 32%),
-          linear-gradient(315deg, rgba(111, 76, 195, 0.12), transparent 28%),
-          rgba(255, 255, 255, 0.74);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        box-shadow: var(--shadow);
-      }
-
-      .board {
-        width: min(920px, 100%);
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .card {
-        position: relative;
-        display: block;
-        width: 100%;
-        aspect-ratio: 2 / 3;
-        padding: 0;
-        border: 0;
-        border-radius: 8px;
-        background: transparent;
-        perspective: 900px;
-        cursor: pointer;
-      }
-
-      .card:disabled {
-        cursor: default;
-      }
-
-      .card:focus-visible {
-        outline: 3px solid var(--gold);
-        outline-offset: 4px;
-      }
-
-      .card-inner {
-        position: absolute;
-        inset: 0;
-        border-radius: 8px;
-        transform-style: preserve-3d;
-        transition: transform 320ms ease;
-      }
-
-      .card.is-flipped .card-inner,
-      .card.is-matched .card-inner {
-        transform: rotateY(180deg);
-      }
-
-      .card-face {
-        position: absolute;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        overflow: hidden;
-        border-radius: 8px;
-        backface-visibility: hidden;
-        border: 1px solid rgba(24, 32, 42, 0.18);
-      }
-
-      .card-back {
-        background:
-          linear-gradient(135deg, rgba(24, 32, 42, 0.88), rgba(24, 32, 42, 0.68)),
-          repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.08) 0 8px, transparent 8px 16px);
-        color: #fff;
-      }
-
-      .card-mark {
-        width: 58%;
-        aspect-ratio: 1;
-        display: grid;
-        place-items: center;
-        border: 2px solid rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-      }
-
-      .card-mark svg {
-        width: 54%;
-        height: 54%;
-        stroke: #fff;
-        stroke-width: 2.5;
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-
-      .card-front {
-        transform: rotateY(180deg);
-        background: #111722;
-      }
-
-      .card-front svg {
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
-
-      .card-photo {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .card-title {
-        position: absolute;
-        inset-inline: 10px;
-        inset-block-end: 10px;
-        min-height: 34px;
-        display: grid;
-        place-items: center;
-        padding: 5px 10px;
-        border-radius: 8px;
-        background: rgba(17, 23, 34, 0.78);
-        color: #fff;
-        font-size: 0.86rem;
-        font-weight: 900;
-        line-height: 1.35;
-        text-align: center;
-        backdrop-filter: blur(8px);
-      }
-
-      .card.is-matched .card-front {
-        border-color: var(--green);
-        box-shadow: inset 0 0 0 4px rgba(42, 168, 118, 0.28);
+        justify-content: flex-start;
       }
 
       .side-panel {
-        display: grid;
-        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* Touch-friendly optimizations */
+    @media (any-pointer: coarse) {
+
+      button,
+      a,
+      [role="button"],
+      input,
+      select {
+        min-height: 44px;
+        touch-action: manipulation;
       }
 
-      .panel {
-        padding: 14px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.86);
-        box-shadow: 0 12px 30px rgba(24, 32, 42, 0.08);
+      input,
+      select {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        width: min(100% - 20px, 620px);
+        padding-top: 14px;
       }
 
-      .panel h2 {
-        margin: 0 0 12px;
-        font-size: 1rem;
+      .score-strip,
+      .status-card,
+      .side-panel {
+        grid-template-columns: 1fr;
       }
 
-      .characters {
-        display: grid;
-        gap: 10px;
-      }
-
-      .character-row {
-        min-width: 0;
-        display: grid;
-        grid-template-columns: 48px minmax(0, 1fr);
-        gap: 10px;
-        align-items: center;
-      }
-
-      .mini {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(24, 32, 42, 0.12);
-        background: var(--mini-bg);
-        overflow: hidden;
-      }
-
-      .mini svg,
-      .mini img {
-        width: 100%;
-        height: 100%;
-      }
-
-      .mini img {
-        object-fit: cover;
-      }
-
-      .character-name {
-        display: block;
-        font-weight: 900;
-      }
-
-      .character-count {
-        display: block;
-        margin-top: 2px;
-        color: var(--muted);
-        font-size: 0.83rem;
-        font-weight: 700;
-      }
-
-      .log {
-        display: grid;
+      .board {
         gap: 8px;
       }
 
-      .log-line {
-        min-height: 34px;
-        padding: 8px 10px;
-        border-radius: 7px;
-        background: rgba(24, 32, 42, 0.06);
-        color: #344054;
-        font-size: 0.86rem;
-        font-weight: 700;
-        line-height: 1.45;
+      .card-title {
+        inset-inline: 5px;
+        inset-block-end: 5px;
+        min-height: 30px;
+        padding: 4px 5px;
+        font-size: 0.72rem;
       }
 
-      .winner {
-        display: none;
-        position: fixed;
-        inset: 0;
-        z-index: 20;
-        place-items: center;
-        padding: 22px;
-        background: rgba(24, 32, 42, 0.46);
+      .board-wrap {
+        padding: 10px;
       }
+    }
 
-      .winner.is-open {
-        display: grid;
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
       }
+    }
+  </style>
+  <link rel="stylesheet" href="../game-shell.css" />
+</head>
 
-      .winner-box {
-        width: min(430px, 100%);
-        padding: 22px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        background: #fff;
-        box-shadow: var(--shadow);
-        text-align: center;
-      }
-
-      .winner-box h2 {
-        margin: 0 0 10px;
-        font-size: clamp(1.45rem, 5vw, 2.2rem);
-      }
-
-      .winner-box p {
-        margin: 0 0 18px;
-        color: var(--muted);
-        font-weight: 700;
-        line-height: 1.7;
-      }
-
-      .primary-button {
-        min-height: 44px;
-        padding: 0 18px;
-        border: 0;
-        border-radius: 8px;
-        background: var(--ink);
-        color: #fff;
-        font-weight: 900;
-        cursor: pointer;
-      }
-
-      @media (max-width: 980px) {
-        .topbar,
-        .game-shell {
-          grid-template-columns: 1fr;
-        }
-
-        .toolbar {
-          justify-content: flex-start;
-        }
-
-        .side-panel {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      /* Touch-friendly optimizations */
-      @media (any-pointer: coarse) {
-        button,
-        a,
-        [role="button"],
-        input,
-        select {
-          min-height: 44px;
-          touch-action: manipulation;
-        }
-
-        input,
-        select {
-          font-size: 16px;
-        }
-      }
-
-      @media (max-width: 720px) {
-        .app {
-          width: min(100% - 20px, 620px);
-          padding-top: 14px;
-        }
-
-        .score-strip,
-        .status-card,
-        .side-panel {
-          grid-template-columns: 1fr;
-        }
-
-        .board {
-          gap: 8px;
-        }
-
-        .card-title {
-          inset-inline: 5px;
-          inset-block-end: 5px;
-          min-height: 30px;
-          padding: 4px 5px;
-          font-size: 0.72rem;
-        }
-
-        .board-wrap {
-          padding: 10px;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          scroll-behavior: auto !important;
-          transition-duration: 0.01ms !important;
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-        }
-      }
-    </style>
-    <link rel="stylesheet" href="../game-shell.css" />
-  </head>
-  <body class="game-page game-memory">
-    <nav class="game-nav" aria-label="ناوبری بازی‌ها">
-      <div class="game-nav-inner">
-        <a class="game-brand" href="../index.html" aria-label="دنیای بازی دلسا و بابا">
-          <span class="game-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span><strong>دنیای بازی</strong><small>دلسا و بابا</small></span>
+<body class="game-page game-memory">
+  <nav class="game-nav" aria-label="ناوبری بازی‌ها">
+    <div class="game-nav-inner">
+      <a class="game-brand" href="../index.html" aria-label="دنیای بازی دلسا و بابا">
+        <span class="game-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span><strong>دنیای بازی</strong><small>دلسا و بابا</small></span>
+      </a>
+      <div class="game-switcher">
+        <a class="game-switch" href="../game1/index.html">
+          <span aria-hidden="true">♫</span><b>پیانو</b>
         </a>
-        <div class="game-switcher">
-          <a class="game-switch" href="../game1/index.html">
-            <span aria-hidden="true">♫</span><b>پیانو</b>
-          </a>
-          <a class="game-switch is-active" href="../game2/index.html" aria-current="page">
-            <span aria-hidden="true">✦</span><b>حافظه</b>
-          </a>
-          <a class="game-switch" href="../game3/index.html">
-            <span aria-hidden="true">◆</span><b>پازل</b>
-          </a>
-        </div>
-        <a class="all-games-link" href="../index.html#games">
-          <span>همه بازی‌ها</span>
-          <span aria-hidden="true">←</span>
+        <a class="game-switch is-active" href="../game2/index.html" aria-current="page">
+          <span aria-hidden="true">✦</span><b>حافظه</b>
+        </a>
+        <a class="game-switch" href="../game3/index.html">
+          <span aria-hidden="true">◆</span><b>پازل</b>
         </a>
       </div>
-    </nav>
-    <main class="app">
-      <header class="topbar">
-        <div class="title-block">
-          <p class="eyebrow">دو بازیکن، هشت جفت تصویر</p>
-          <h1>شکارچیان شیاطین کی‌پاپ</h1>
-        </div>
-        <div class="toolbar" aria-label="کنترل بازی">
-          <button class="icon-button" id="restartButton" type="button" title="شروع دوباره" aria-label="شروع دوباره">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 12a9 9 0 1 0 3-6.7" />
-              <path d="M3 4v6h6" />
-            </svg>
-          </button>
-          <button class="icon-button" id="shuffleButton" type="button" title="بر زدن کارت‌ها" aria-label="بر زدن کارت‌ها">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M16 3h5v5" />
-              <path d="M4 20 21 3" />
-              <path d="M21 16v5h-5" />
-              <path d="M15 15 21 21" />
-              <path d="M4 4l5 5" />
-            </svg>
-          </button>
-          <button class="mode-button" id="peekButton" type="button">نمایش کوتاه</button>
-        </div>
-      </header>
-
-      <section class="score-strip" aria-label="تابلوی امتیاز">
-        <article class="score-card is-active" id="playerOneCard" style="--player-color: var(--rose)">
-          <span class="score-label">بازیکن اول</span>
-          <strong class="score-value"><span id="scoreOne">۰</span><span>جفت</span></strong>
-        </article>
-        <article class="score-card" id="playerTwoCard" style="--player-color: var(--aqua)">
-          <span class="score-label">بازیکن دوم</span>
-          <strong class="score-value"><span id="scoreTwo">۰</span><span>جفت</span></strong>
-        </article>
-        <article class="status-card">
-          <div>
-            <span class="meta-label">نوبت</span>
-            <strong class="meta-value" id="turnText">بازیکن اول</strong>
-          </div>
-          <div>
-            <span class="meta-label">پیدا شده</span>
-            <strong class="meta-value" id="matchText">۰ از ۸</strong>
-          </div>
-          <div>
-            <span class="meta-label">زمان</span>
-            <strong class="meta-value" id="timeText">۰۰:۰۰</strong>
-          </div>
-        </article>
-      </section>
-
-      <section class="game-shell">
-        <div class="board-wrap">
-          <div class="board" id="board" aria-label="صفحه کارت‌های حافظه"></div>
-        </div>
-
-        <aside class="side-panel" aria-label="وضعیت بازی">
-          <section class="panel">
-            <h2>شخصیت‌ها</h2>
-            <div class="characters" id="characterList"></div>
-          </section>
-          <section class="panel">
-            <h2>گزارش نوبت</h2>
-            <div class="log" id="log" aria-live="polite"></div>
-          </section>
-        </aside>
-      </section>
-    </main>
-
-    <div class="winner" id="winnerModal" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
-      <div class="winner-box">
-        <h2 id="winnerTitle">پایان بازی</h2>
-        <p id="winnerMessage"></p>
-        <button class="primary-button" id="playAgainButton" type="button">شروع بازی تازه</button>
-      </div>
+      <a class="all-games-link" href="../index.html#games">
+        <span>همه بازی‌ها</span>
+        <span aria-hidden="true">←</span>
+      </a>
     </div>
+  </nav>
+  <main class="app">
+    <header class="topbar">
+      <div class="title-block">
+        <p class="eyebrow">دو بازیکن، هشت جفت تصویر</p>
+        <h1>شکارچیان شیاطین کی‌پاپ</h1>
+      </div>
+      <div class="toolbar" aria-label="کنترل بازی">
+        <button class="icon-button" id="restartButton" type="button" title="شروع دوباره" aria-label="شروع دوباره">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 3-6.7" />
+            <path d="M3 4v6h6" />
+          </svg>
+        </button>
+        <button class="icon-button" id="shuffleButton" type="button" title="بر زدن کارت‌ها" aria-label="بر زدن کارت‌ها">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M16 3h5v5" />
+            <path d="M4 20 21 3" />
+            <path d="M21 16v5h-5" />
+            <path d="M15 15 21 21" />
+            <path d="M4 4l5 5" />
+          </svg>
+        </button>
+        <button class="mode-button" id="peekButton" type="button">نمایش کوتاه</button>
+      </div>
+    </header>
 
-    <script>
-      const formatFa = new Intl.NumberFormat("fa-IR");
-      const board = document.querySelector("#board");
-      const scoreOne = document.querySelector("#scoreOne");
-      const scoreTwo = document.querySelector("#scoreTwo");
-      const turnText = document.querySelector("#turnText");
-      const matchText = document.querySelector("#matchText");
-      const timeText = document.querySelector("#timeText");
-      const playerOneCard = document.querySelector("#playerOneCard");
-      const playerTwoCard = document.querySelector("#playerTwoCard");
-      const log = document.querySelector("#log");
-      const winnerModal = document.querySelector("#winnerModal");
-      const winnerTitle = document.querySelector("#winnerTitle");
-      const winnerMessage = document.querySelector("#winnerMessage");
+    <section class="score-strip" aria-label="تابلوی امتیاز">
+      <article class="score-card is-active" id="playerOneCard" style="--player-color: var(--rose)">
+        <span class="score-label">بازیکن اول</span>
+        <strong class="score-value"><span id="scoreOne">۰</span><span>جفت</span></strong>
+      </article>
+      <article class="score-card" id="playerTwoCard" style="--player-color: var(--aqua)">
+        <span class="score-label">بازیکن دوم</span>
+        <strong class="score-value"><span id="scoreTwo">۰</span><span>جفت</span></strong>
+      </article>
+      <article class="status-card">
+        <div>
+          <span class="meta-label">نوبت</span>
+          <strong class="meta-value" id="turnText">بازیکن اول</strong>
+        </div>
+        <div>
+          <span class="meta-label">پیدا شده</span>
+          <strong class="meta-value" id="matchText">۰ از ۸</strong>
+        </div>
+        <div>
+          <span class="meta-label">زمان</span>
+          <strong class="meta-value" id="timeText">۰۰:۰۰</strong>
+        </div>
+      </article>
+    </section>
 
-      const characters = {
-        zumi: {
-          name: "زومی",
-          role: "موهای سرمه‌ای، چتری کوتاه و دو گوجه‌ای",
-          image: "assets/zumi.png",
-          main: "#0d617a",
-          accent: "#86ecff",
-          hair: "#111c33",
-          hair2: "#273f67",
-          skin: "#f2c2a9",
-        },
-        mira: {
-          name: "میرا",
-          role: "موی بلند شرابی/بنفش و لباس سفید طلایی",
-          image: "assets/mira.png",
-          main: "#a52272",
-          accent: "#f6c85f",
-          hair: "#761747",
-          hair2: "#d4479e",
-          skin: "#f2c2a9",
-        },
-        rumi: {
-          name: "رومی",
-          role: "موهای بنفش بافته و کت مشکی طلایی",
-          image: "assets/rumi.png",
-          main: "#7d4bd2",
-          accent: "#f6c85f",
-          hair: "#7f3fb9",
-          hair2: "#c16be6",
-          skin: "#ffd2b8",
-        },
-      };
+    <section class="game-shell">
+      <div class="board-wrap">
+        <div class="board" id="board" aria-label="صفحه کارت‌های حافظه"></div>
+      </div>
 
-      const deckSource = [
-        { id: "zumi-dagger", character: "zumi", label: "زومی خنجر نورانی" },
-        { id: "zumi-navy", character: "zumi", label: "زومی سایه سرمه‌ای" },
-        { id: "zumi-beat", character: "zumi", label: "زومی ضرب‌آهنگ شب" },
-        { id: "mira-wave", character: "mira", label: "میرا موج بنفش" },
-        { id: "mira-gold", character: "mira", label: "میرا زره طلایی" },
-        { id: "mira-stage", character: "mira", label: "میرا نگاه صحنه" },
-        { id: "rumi-song", character: "rumi", label: "رومی آواز بنفش" },
-        { id: "rumi-gold", character: "rumi", label: "رومی کت طلایی" },
-      ];
+      <aside class="side-panel" aria-label="وضعیت بازی">
+        <section class="panel">
+          <h2>شخصیت‌ها</h2>
+          <div class="characters" id="characterList"></div>
+        </section>
+        <section class="panel">
+          <h2>گزارش نوبت</h2>
+          <div class="log" id="log" aria-live="polite"></div>
+        </section>
+      </aside>
+    </section>
+  </main>
 
-      let cards = [];
-      let opened = [];
-      let currentPlayer = 0;
-      let scores = [0, 0];
-      let matchedPairs = 0;
-      let locked = false;
-      let startedAt = null;
-      let timerId = null;
-      let logLines = [];
+  <div class="winner" id="winnerModal" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
+    <div class="winner-box">
+      <h2 id="winnerTitle">پایان بازی</h2>
+      <p id="winnerMessage"></p>
+      <button class="primary-button" id="playAgainButton" type="button">شروع بازی تازه</button>
+    </div>
+  </div>
 
-      function toFa(value) {
-        return formatFa.format(value);
+  <script>
+    const formatFa = new Intl.NumberFormat("fa-IR");
+    const board = document.querySelector("#board");
+    const scoreOne = document.querySelector("#scoreOne");
+    const scoreTwo = document.querySelector("#scoreTwo");
+    const turnText = document.querySelector("#turnText");
+    const matchText = document.querySelector("#matchText");
+    const timeText = document.querySelector("#timeText");
+    const playerOneCard = document.querySelector("#playerOneCard");
+    const playerTwoCard = document.querySelector("#playerTwoCard");
+    const log = document.querySelector("#log");
+    const winnerModal = document.querySelector("#winnerModal");
+    const winnerTitle = document.querySelector("#winnerTitle");
+    const winnerMessage = document.querySelector("#winnerMessage");
+
+    const characters = {
+      zumi: {
+        name: "زومی",
+        role: "موهای سرمه‌ای، چتری کوتاه و دو گوجه‌ای",
+        image: "assets/zumi.png",
+        main: "#0d617a",
+        accent: "#86ecff",
+        hair: "#111c33",
+        hair2: "#273f67",
+        skin: "#f2c2a9",
+      },
+      mira: {
+        name: "میرا",
+        role: "موی بلند شرابی/بنفش و لباس سفید طلایی",
+        image: "assets/mira.png",
+        main: "#a52272",
+        accent: "#f6c85f",
+        hair: "#761747",
+        hair2: "#d4479e",
+        skin: "#f2c2a9",
+      },
+      rumi: {
+        name: "رومی",
+        role: "موهای بنفش بافته و کت مشکی طلایی",
+        image: "assets/rumi.png",
+        main: "#7d4bd2",
+        accent: "#f6c85f",
+        hair: "#7f3fb9",
+        hair2: "#c16be6",
+        skin: "#ffd2b8",
+      },
+    };
+
+    const deckSource = [
+      { id: "zumi-dagger", character: "zumi", label: "زومی خنجر نورانی" },
+      { id: "zumi-navy", character: "zumi", label: "زومی سایه سرمه‌ای" },
+      { id: "zumi-beat", character: "zumi", label: "زومی ضرب‌آهنگ شب" },
+      { id: "mira-wave", character: "mira", label: "میرا موج بنفش" },
+      { id: "mira-gold", character: "mira", label: "میرا زره طلایی" },
+      { id: "mira-stage", character: "mira", label: "میرا نگاه صحنه" },
+      { id: "rumi-song", character: "rumi", label: "رومی آواز بنفش" },
+      { id: "rumi-gold", character: "rumi", label: "رومی کت طلایی" },
+    ];
+
+    let cards = [];
+    let opened = [];
+    let currentPlayer = 0;
+    let scores = [0, 0];
+    let matchedPairs = 0;
+    let locked = false;
+    let startedAt = null;
+    let timerId = null;
+    let logLines = [];
+
+    function toFa(value) {
+      return formatFa.format(value);
+    }
+
+    function padFa(value) {
+      return toFa(value).padStart(2, "۰");
+    }
+
+    function shuffle(items) {
+      const array = [...items];
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
+      return array;
+    }
 
-      function padFa(value) {
-        return toFa(value).padStart(2, "۰");
-      }
-
-      function shuffle(items) {
-        const array = [...items];
-        for (let i = array.length - 1; i > 0; i -= 1) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-      }
-
-      function cardBackIcon() {
-        return `
+    function cardBackIcon() {
+      return `
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 3l2.8 5.6L21 9.5l-4.5 4.4 1.1 6.1L12 17l-5.6 3 1.1-6.1L3 9.5l6.2-.9z" />
           </svg>
         `;
-      }
+    }
 
-      function createDeck() {
-        return shuffle(
-          deckSource.flatMap((item) => [
-            { ...item, uid: `${item.id}-a` },
-            { ...item, uid: `${item.id}-b` },
-          ]),
-        );
-      }
+    function createDeck() {
+      return shuffle(
+        deckSource.flatMap((item) => [
+          { ...item, uid: `${item.id}-a` },
+          { ...item, uid: `${item.id}-b` },
+        ]),
+      );
+    }
 
-      function renderBoard() {
-        board.innerHTML = cards
-          .map((card, index) => {
-            const character = characters[card.character];
-            return `
+    function renderBoard() {
+      board.innerHTML = cards
+        .map((card, index) => {
+          const character = characters[card.character];
+          return `
               <button class="card" type="button" data-index="${index}" aria-label="کارت بسته">
                 <span class="card-inner">
                   <span class="card-face card-back">
@@ -778,20 +783,20 @@
                 </span>
               </button>
             `;
-          })
-          .join("");
-      }
+        })
+        .join("");
+    }
 
-      function renderCharacters() {
-        const counts = deckSource.reduce((acc, item) => {
-          acc[item.character] = (acc[item.character] || 0) + 1;
-          return acc;
-        }, {});
+    function renderCharacters() {
+      const counts = deckSource.reduce((acc, item) => {
+        acc[item.character] = (acc[item.character] || 0) + 1;
+        return acc;
+      }, {});
 
-        document.querySelector("#characterList").innerHTML = Object.entries(characters)
-          .map(([key, character]) => {
-            const sample = deckSource.find((item) => item.character === key);
-            return `
+      document.querySelector("#characterList").innerHTML = Object.entries(characters)
+        .map(([key, character]) => {
+          const sample = deckSource.find((item) => item.character === key);
+          return `
               <div class="character-row">
                 <span class="mini" style="--mini-bg: ${character.main}22">
                   <img src="${character.image}" alt="${sample.label}" />
@@ -802,159 +807,160 @@
                 </span>
               </div>
             `;
-          })
-          .join("");
+        })
+        .join("");
+    }
+
+    function renderLog() {
+      log.innerHTML = logLines
+        .slice(0, 4)
+        .map((line) => `<div class="log-line">${line}</div>`)
+        .join("");
+    }
+
+    function addLog(line) {
+      logLines = [line, ...logLines].slice(0, 4);
+      renderLog();
+    }
+
+    function updateStats() {
+      scoreOne.textContent = toFa(scores[0]);
+      scoreTwo.textContent = toFa(scores[1]);
+      turnText.textContent = currentPlayer === 0 ? "بازیکن اول" : "بازیکن دوم";
+      matchText.textContent = `${toFa(matchedPairs)} از ${toFa(deckSource.length)}`;
+      playerOneCard.classList.toggle("is-active", currentPlayer === 0);
+      playerTwoCard.classList.toggle("is-active", currentPlayer === 1);
+    }
+
+    function startTimer() {
+      if (timerId) return;
+      startedAt = Date.now();
+      timerId = window.setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        timeText.textContent = `${padFa(minutes)}:${padFa(seconds)}`;
+      }, 500);
+    }
+
+    function stopTimer() {
+      window.clearInterval(timerId);
+      timerId = null;
+    }
+
+    function setCardOpen(cardButton, cardData, open) {
+      cardButton.classList.toggle("is-flipped", open);
+      cardButton.setAttribute("aria-label", open ? cardData.label : "کارت بسته");
+    }
+
+    function handleCardClick(event) {
+      const button = event.target.closest(".card");
+      if (!button || locked) return;
+
+      startTimer();
+
+      const index = Number(button.dataset.index);
+      const card = cards[index];
+      if (card.matched || opened.some((item) => item.index === index)) return;
+
+      setCardOpen(button, card, true);
+      opened.push({ index, button, card });
+
+      if (opened.length === 2) {
+        checkPair();
       }
+    }
 
-      function renderLog() {
-        log.innerHTML = logLines
-          .slice(0, 4)
-          .map((line) => `<div class="log-line">${line}</div>`)
-          .join("");
-      }
+    function checkPair() {
+      locked = true;
+      const [first, second] = opened;
 
-      function addLog(line) {
-        logLines = [line, ...logLines].slice(0, 4);
-        renderLog();
-      }
-
-      function updateStats() {
-        scoreOne.textContent = toFa(scores[0]);
-        scoreTwo.textContent = toFa(scores[1]);
-        turnText.textContent = currentPlayer === 0 ? "بازیکن اول" : "بازیکن دوم";
-        matchText.textContent = `${toFa(matchedPairs)} از ${toFa(deckSource.length)}`;
-        playerOneCard.classList.toggle("is-active", currentPlayer === 0);
-        playerTwoCard.classList.toggle("is-active", currentPlayer === 1);
-      }
-
-      function startTimer() {
-        if (timerId) return;
-        startedAt = Date.now();
-        timerId = window.setInterval(() => {
-          const elapsed = Math.floor((Date.now() - startedAt) / 1000);
-          const minutes = Math.floor(elapsed / 60);
-          const seconds = elapsed % 60;
-          timeText.textContent = `${padFa(minutes)}:${padFa(seconds)}`;
-        }, 500);
-      }
-
-      function stopTimer() {
-        window.clearInterval(timerId);
-        timerId = null;
-      }
-
-      function setCardOpen(cardButton, cardData, open) {
-        cardButton.classList.toggle("is-flipped", open);
-        cardButton.setAttribute("aria-label", open ? cardData.label : "کارت بسته");
-      }
-
-      function handleCardClick(event) {
-        const button = event.target.closest(".card");
-        if (!button || locked) return;
-
-        startTimer();
-
-        const index = Number(button.dataset.index);
-        const card = cards[index];
-        if (card.matched || opened.some((item) => item.index === index)) return;
-
-        setCardOpen(button, card, true);
-        opened.push({ index, button, card });
-
-        if (opened.length === 2) {
-          checkPair();
-        }
-      }
-
-      function checkPair() {
-        locked = true;
-        const [first, second] = opened;
-
-        if (first.card.id === second.card.id) {
-          window.setTimeout(() => {
-            first.card.matched = true;
-            second.card.matched = true;
-            first.button.classList.add("is-matched");
-            second.button.classList.add("is-matched");
-            first.button.disabled = true;
-            second.button.disabled = true;
-            scores[currentPlayer] += 1;
-            matchedPairs += 1;
-            addLog(`${currentPlayer === 0 ? "بازیکن اول" : "بازیکن دوم"} جفت ${first.card.label} را پیدا کرد.`);
-            opened = [];
-            locked = false;
-            updateStats();
-            if (matchedPairs === deckSource.length) finishGame();
-          }, 360);
-          return;
-        }
-
+      if (first.card.id === second.card.id) {
         window.setTimeout(() => {
-          setCardOpen(first.button, first.card, false);
-          setCardOpen(second.button, second.card, false);
-          currentPlayer = currentPlayer === 0 ? 1 : 0;
-          addLog(`جفت نبود؛ حالا نوبت ${currentPlayer === 0 ? "بازیکن اول" : "بازیکن دوم"} است.`);
+          first.card.matched = true;
+          second.card.matched = true;
+          first.button.classList.add("is-matched");
+          second.button.classList.add("is-matched");
+          first.button.disabled = true;
+          second.button.disabled = true;
+          scores[currentPlayer] += 1;
+          matchedPairs += 1;
+          addLog(`${currentPlayer === 0 ? "بازیکن اول" : "بازیکن دوم"} جفت ${first.card.label} را پیدا کرد.`);
           opened = [];
           locked = false;
           updateStats();
-        }, 820);
+          if (matchedPairs === deckSource.length) finishGame();
+        }, 360);
+        return;
       }
 
-      function finishGame() {
-        stopTimer();
-        const [first, second] = scores;
-        const winner =
-          first === second ? "بازی مساوی شد" : first > second ? "بازیکن اول برنده شد" : "بازیکن دوم برنده شد";
-        winnerTitle.textContent = winner;
-        winnerMessage.textContent = `نتیجه نهایی: بازیکن اول ${toFa(first)} جفت، بازیکن دوم ${toFa(second)} جفت. زمان ${timeText.textContent}.`;
-        winnerModal.classList.add("is-open");
-      }
-
-      function resetGame({ keepOrder = false } = {}) {
-        stopTimer();
-        cards = keepOrder ? cards.map((card) => ({ ...card, matched: false })) : createDeck();
+      window.setTimeout(() => {
+        setCardOpen(first.button, first.card, false);
+        setCardOpen(second.button, second.card, false);
+        currentPlayer = currentPlayer === 0 ? 1 : 0;
+        addLog(`جفت نبود؛ حالا نوبت ${currentPlayer === 0 ? "بازیکن اول" : "بازیکن دوم"} است.`);
         opened = [];
-        currentPlayer = 0;
-        scores = [0, 0];
-        matchedPairs = 0;
         locked = false;
-        startedAt = null;
-        timeText.textContent = "۰۰:۰۰";
-        winnerModal.classList.remove("is-open");
-        logLines = ["کارت‌ها آماده‌اند. بازیکن اول شروع می‌کند."];
-        renderBoard();
-        renderLog();
         updateStats();
-      }
+      }, 820);
+    }
 
-      function peekCards() {
-        if (locked) return;
-        startTimer();
-        locked = true;
-        const buttons = [...board.querySelectorAll(".card:not(.is-matched)")];
+    function finishGame() {
+      stopTimer();
+      const [first, second] = scores;
+      const winner =
+        first === second ? "بازی مساوی شد" : first > second ? "بازیکن اول برنده شد" : "بازیکن دوم برنده شد";
+      winnerTitle.textContent = winner;
+      winnerMessage.textContent = `نتیجه نهایی: بازیکن اول ${toFa(first)} جفت، بازیکن دوم ${toFa(second)} جفت. زمان ${timeText.textContent}.`;
+      winnerModal.classList.add("is-open");
+    }
+
+    function resetGame({ keepOrder = false } = {}) {
+      stopTimer();
+      cards = keepOrder ? cards.map((card) => ({ ...card, matched: false })) : createDeck();
+      opened = [];
+      currentPlayer = 0;
+      scores = [0, 0];
+      matchedPairs = 0;
+      locked = false;
+      startedAt = null;
+      timeText.textContent = "۰۰:۰۰";
+      winnerModal.classList.remove("is-open");
+      logLines = ["کارت‌ها آماده‌اند. بازیکن اول شروع می‌کند."];
+      renderBoard();
+      renderLog();
+      updateStats();
+    }
+
+    function peekCards() {
+      if (locked) return;
+      startTimer();
+      locked = true;
+      const buttons = [...board.querySelectorAll(".card:not(.is-matched)")];
+      buttons.forEach((button) => {
+        const card = cards[Number(button.dataset.index)];
+        setCardOpen(button, card, true);
+      });
+      window.setTimeout(() => {
         buttons.forEach((button) => {
           const card = cards[Number(button.dataset.index)];
-          setCardOpen(button, card, true);
+          if (!card.matched && !opened.some((item) => item.index === Number(button.dataset.index))) {
+            setCardOpen(button, card, false);
+          }
         });
-        window.setTimeout(() => {
-          buttons.forEach((button) => {
-            const card = cards[Number(button.dataset.index)];
-            if (!card.matched && !opened.some((item) => item.index === Number(button.dataset.index))) {
-              setCardOpen(button, card, false);
-            }
-          });
-          locked = false;
-        }, 1200);
-      }
+        locked = false;
+      }, 1200);
+    }
 
-      board.addEventListener("click", handleCardClick);
-      document.querySelector("#restartButton").addEventListener("click", () => resetGame({ keepOrder: true }));
-      document.querySelector("#shuffleButton").addEventListener("click", () => resetGame());
-      document.querySelector("#peekButton").addEventListener("click", peekCards);
-      document.querySelector("#playAgainButton").addEventListener("click", () => resetGame());
+    board.addEventListener("click", handleCardClick);
+    document.querySelector("#restartButton").addEventListener("click", () => resetGame({ keepOrder: true }));
+    document.querySelector("#shuffleButton").addEventListener("click", () => resetGame());
+    document.querySelector("#peekButton").addEventListener("click", peekCards);
+    document.querySelector("#playAgainButton").addEventListener("click", () => resetGame());
 
-      renderCharacters();
-      resetGame();
-    </script>
-  </body>
+    renderCharacters();
+    resetGame();
+  </script>
+</body>
+
 </html>

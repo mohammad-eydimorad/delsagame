@@ -401,6 +401,7 @@ input[type="range"] {
 
 /* Touch-friendly optimizations */
 @media (any-pointer: coarse) {
+
   button,
   a,
   [role="button"],
