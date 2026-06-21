@@ -830,9 +830,20 @@ body.game-page input {
     min-width: 0;
   }
 
-  .game-piano .metrics,
-  .game-puzzle .stats {
+  .game-piano .metrics {
     width: 100%;
+  }
+
+  .game-puzzle .stats {
+    width: auto;
+  }
+
+  .game-puzzle .stat {
+    min-width: 64px;
+  }
+
+  .game-puzzle .top-bar h1 {
+    font-size: clamp(1rem, 4.8vw, 1.25rem);
   }
 
   .game-piano .control-strip>*,
@@ -912,6 +923,14 @@ body.game-page input {
   .game-puzzle .primary-button,
   .game-puzzle .ghost-button {
     min-height: 46px;
+  }
+
+  .game-puzzle .app-shell {
+    padding-top: 10px;
+  }
+
+  .game-puzzle .top-bar {
+    margin-bottom: 8px;
   }
 }
 

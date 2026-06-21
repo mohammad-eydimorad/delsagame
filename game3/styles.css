@@ -465,6 +465,13 @@ h1 {
   padding: 14px;
 }
 
+.touch-hint {
+  margin: -3px 0 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
 .piece-tray {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -489,6 +496,35 @@ h1 {
   font-size: 0.92rem;
   font-weight: 800;
   text-align: center;
+}
+
+.drag-ghost {
+  position: fixed;
+  z-index: 1000;
+  margin: 0;
+  border: 2px solid rgba(255, 255, 255, 0.88);
+  border-radius: 10px;
+  background-image: var(--tile-image);
+  background-position: var(--tile-position);
+  background-repeat: no-repeat;
+  background-size: var(--tile-size);
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.42),
+    0 0 0 4px rgba(66, 216, 255, 0.22);
+  opacity: 0.94;
+  pointer-events: none;
+  transform: translate(-50%, -118%) rotate(-2deg);
+}
+
+.piece.dragging,
+.slot.dragging {
+  opacity: 0.34;
+}
+
+body.is-piece-dragging {
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Touch-friendly optimizations */
@@ -653,12 +689,55 @@ h1 {
   }
 
   .puzzle-stage {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) clamp(104px, 31vw, 136px);
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .board-shell {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-self: start;
+  }
+
+  .pieces-panel {
+    grid-template-rows: auto auto 1fr;
+    gap: 5px;
+    padding: 8px;
+  }
+
+  .pieces-panel .section-head {
+    gap: 5px;
+  }
+
+  .touch-hint {
+    margin: 0;
+    font-size: 0.58rem;
+    line-height: 1.35;
   }
 
   .piece-tray {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    max-height: 290px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: start;
+    gap: 4px;
+    max-height: none;
+    overflow: hidden;
+    padding: 4px;
+  }
+
+  .piece-tray[data-size="3"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .piece,
+  .slot {
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .piece,
+  .slot.filled {
+    touch-action: none !important;
   }
 
   .image-choice {
@@ -699,10 +778,6 @@ h1 {
     padding: 4px;
   }
 
-  .piece-tray {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .current-image {
     grid-template-columns: 78px minmax(0, 1fr);
   }
@@ -720,40 +795,44 @@ h1 {
   }
 
   .top-bar {
-    gap: 10px;
-    padding: 2px 0 12px;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 0 0 8px;
   }
 
   .eyebrow {
-    margin: 0 0 4px;
-    font-size: 0.8rem;
+    display: none;
   }
 
   h1 {
-    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-size: clamp(1rem, 4.8vw, 1.25rem);
+    white-space: nowrap;
   }
 
   .stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    width: 100%;
+    display: flex;
+    gap: 4px;
+    width: auto;
   }
 
   .stat {
-    min-width: auto;
-    padding: 8px 10px;
-    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 64px;
+    padding: 6px 7px;
+    border-radius: 9px;
   }
 
   .stat span {
-    font-size: 0.7rem;
+    font-size: 0.62rem;
   }
 
   .stat strong {
-    margin-top: 3px;
-    font-size: 1rem;
+    margin-top: 0;
+    font-size: 0.82rem;
   }
 
   .game-layout {
@@ -856,18 +935,38 @@ h1 {
   }
 
   .puzzle-stage {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) clamp(120px, 35vw, 146px);
+    gap: 6px;
   }
 
   .board-shell {
-    padding: 6px;
-    border-radius: 6px;
+    padding: 5px;
+    border-radius: 10px;
+  }
+
+  .stage-head {
+    padding: 0 1px 5px;
+    font-size: 0.7rem;
+  }
+
+  .pieces-panel {
+    gap: 4px;
+    padding: 5px;
+    border-radius: 10px;
+  }
+
+  .pieces-panel .section-head {
+    font-size: 0.68rem;
+  }
+
+  .pieces-panel .section-head strong {
+    font-size: 0.76rem;
   }
 
   .board {
     max-width: 100%;
-    padding: 3px;
+    padding: 2px;
+    border-radius: 9px;
   }
 
   .slot {
@@ -875,11 +974,10 @@ h1 {
   }
 
   .piece-tray {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
-    max-height: 280px;
-    padding: 6px;
-    border-radius: 6px;
+    gap: 3px;
+    max-height: none;
+    padding: 3px;
+    border-radius: 7px;
   }
 
   .piece {

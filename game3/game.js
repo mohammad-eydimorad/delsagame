@@ -61,6 +61,11 @@ const currentImage = document.getElementById("currentImage");
 const imageType = document.getElementById("imageType");
 const imageTitle = document.getElementById("imageTitle");
 const winToast = document.getElementById("winToast");
+const touchDrag = {
+  active: null,
+  suppressClickUntil: 0,
+};
+const TOUCH_DRAG_THRESHOLD = 7;
 
 function toPersianNumber(value) {
   return String(value).replace(/\d/g, (digit) => persianDigits[Number(digit)]);
@@ -195,6 +200,157 @@ function createTileElement(pieceValue, className, tagName = "button") {
   return piece;
 }
 
+function setSelectedPiece(pieceValue, originSlot) {
+  state.selectedPiece = pieceValue;
+  state.selectedSlot = originSlot;
+  syncSelectedPiece();
+}
+
+function createDragGhost(pieceValue, sourceElement) {
+  const ghost = createTileElement(pieceValue, "drag-ghost", "div");
+  const sourceRect = sourceElement.getBoundingClientRect();
+  const ghostSize = Math.max(52, Math.min(76, sourceRect.width * 1.12));
+
+  ghost.style.width = `${ghostSize}px`;
+  ghost.style.height = `${ghostSize}px`;
+  document.body.appendChild(ghost);
+  return ghost;
+}
+
+function pointInsideRect(x, y, rect, padding = 0) {
+  return (
+    x >= rect.left - padding &&
+    x <= rect.right + padding &&
+    y >= rect.top - padding &&
+    y <= rect.bottom + padding
+  );
+}
+
+function slotAtPoint(clientX, clientY) {
+  const pointedElement = document.elementFromPoint(clientX, clientY);
+  const exactSlot = pointedElement?.closest(".slot");
+
+  if (exactSlot) {
+    return Number(exactSlot.dataset.index);
+  }
+
+  if (pointedElement?.closest(".piece-tray")) {
+    return null;
+  }
+
+  const boardRect = board.getBoundingClientRect();
+  const cellSize = boardRect.width / state.size;
+  const tolerance = Math.min(30, cellSize * 0.48);
+
+  if (!pointInsideRect(clientX, clientY, boardRect, tolerance)) {
+    return null;
+  }
+
+  const safeX = Math.min(boardRect.right - 1, Math.max(boardRect.left, clientX));
+  const safeY = Math.min(boardRect.bottom - 1, Math.max(boardRect.top, clientY));
+  const column = Math.floor(((safeX - boardRect.left) / boardRect.width) * state.size);
+  const row = Math.floor(((safeY - boardRect.top) / boardRect.height) * state.size);
+
+  return row * state.size + column;
+}
+
+function setTouchDropTarget(slotIndex) {
+  document.querySelectorAll(".slot.drop-target").forEach((slot) => {
+    slot.classList.toggle("drop-target", Number(slot.dataset.index) === slotIndex);
+  });
+
+  if (slotIndex !== null) {
+    board.querySelector(`.slot[data-index="${slotIndex}"]`)?.classList.add("drop-target");
+  }
+}
+
+function updateTouchDrag(event) {
+  const drag = touchDrag.active;
+  if (!drag || drag.pointerId !== event.pointerId) return;
+
+  const distance = Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY);
+
+  if (!drag.started && distance >= TOUCH_DRAG_THRESHOLD) {
+    drag.started = true;
+    setSelectedPiece(drag.pieceValue, drag.originSlot);
+    drag.sourceElement.classList.add("dragging");
+    drag.ghost = createDragGhost(drag.pieceValue, drag.sourceElement);
+    document.body.classList.add("is-piece-dragging");
+  }
+
+  if (!drag.started) return;
+
+  event.preventDefault();
+  drag.ghost.style.left = `${event.clientX}px`;
+  drag.ghost.style.top = `${event.clientY}px`;
+  drag.targetSlot = slotAtPoint(event.clientX, event.clientY);
+  setTouchDropTarget(drag.targetSlot);
+}
+
+function isPointNearTray(clientX, clientY) {
+  return pointInsideRect(clientX, clientY, pieceTray.getBoundingClientRect(), 24);
+}
+
+function cleanupTouchDrag() {
+  const drag = touchDrag.active;
+  if (!drag) return;
+
+  drag.sourceElement.classList.remove("dragging");
+  drag.ghost?.remove();
+  document.body.classList.remove("is-piece-dragging");
+  document.querySelectorAll(".drop-target").forEach((slot) => slot.classList.remove("drop-target"));
+  touchDrag.active = null;
+}
+
+function finishTouchDrag(event, cancelled = false) {
+  const drag = touchDrag.active;
+  if (!drag || drag.pointerId !== event.pointerId) return;
+
+  if (!drag.started) {
+    cleanupTouchDrag();
+    return;
+  }
+
+  updateTouchDrag(event);
+  const targetSlot = drag.targetSlot;
+  const shouldReturnToTray =
+    !cancelled && targetSlot === null && drag.originSlot !== null && isPointNearTray(event.clientX, event.clientY);
+
+  touchDrag.suppressClickUntil = performance.now() + 450;
+  cleanupTouchDrag();
+
+  if (cancelled) {
+    clearSelection();
+    syncSelectedPiece();
+  } else if (targetSlot !== null) {
+    placeSelectedAt(targetSlot);
+  } else if (shouldReturnToTray) {
+    returnSelectedToTray();
+  } else {
+    clearSelection();
+    syncSelectedPiece();
+  }
+}
+
+function enableTouchDrag(element, pieceValue, originSlot) {
+  element.addEventListener("pointerdown", (event) => {
+    if (state.solved || event.pointerType === "mouse" || touchDrag.active) return;
+
+    touchDrag.active = {
+      pointerId: event.pointerId,
+      pieceValue,
+      originSlot,
+      sourceElement: element,
+      startX: event.clientX,
+      startY: event.clientY,
+      started: false,
+      ghost: null,
+      targetSlot: null,
+    };
+    element.setPointerCapture?.(event.pointerId);
+  });
+}
+
 function renderBoard() {
   board.style.setProperty("--size", state.size);
   board.replaceChildren();
@@ -233,12 +389,11 @@ function renderBoard() {
         `جایگاه ${toPersianNumber(slotIndex + 1)}، قطعه ${toPersianNumber(pieceValue + 1)}`,
       );
       slot.addEventListener("dragstart", (event) => {
-        state.selectedPiece = pieceValue;
-        state.selectedSlot = slotIndex;
-        syncSelectedPiece();
+        setSelectedPiece(pieceValue, slotIndex);
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("text/plain", String(pieceValue));
       });
+      enableTouchDrag(slot, pieceValue, slotIndex);
       slot.appendChild(placedPiece);
     }
 
@@ -248,6 +403,7 @@ function renderBoard() {
 
 function renderPieceTray() {
   pieceTray.style.setProperty("--size", state.size);
+  pieceTray.dataset.size = state.size;
   pieceTray.replaceChildren();
 
   state.pieces.forEach((pieceValue) => {
@@ -258,9 +414,7 @@ function renderPieceTray() {
     piece.addEventListener("click", () => selectTrayPiece(pieceValue));
 
     piece.addEventListener("dragstart", (event) => {
-      state.selectedPiece = pieceValue;
-      state.selectedSlot = null;
-      syncSelectedPiece();
+      setSelectedPiece(pieceValue, null);
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", String(pieceValue));
     });
@@ -269,6 +423,7 @@ function renderPieceTray() {
       document.querySelectorAll(".drop-target").forEach((slot) => slot.classList.remove("drop-target"));
     });
 
+    enableTouchDrag(piece, pieceValue, null);
     pieceTray.appendChild(piece);
   });
 
@@ -433,6 +588,25 @@ document.addEventListener("keydown", (event) => {
     syncSelectedPiece();
   }
 });
+
+document.addEventListener("pointermove", updateTouchDrag, { passive: false });
+document.addEventListener("pointerup", (event) => finishTouchDrag(event));
+document.addEventListener("pointercancel", (event) => finishTouchDrag(event, true));
+document.addEventListener(
+  "click",
+  (event) => {
+    const clickedTile = event.target instanceof Element && event.target.closest(".piece, .slot");
+
+    if (
+      performance.now() < touchDrag.suppressClickUntil &&
+      clickedTile
+    ) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  },
+  true,
+);
 
 pieceTray.addEventListener("dragover", (event) => {
   if (state.selectedSlot !== null) {
