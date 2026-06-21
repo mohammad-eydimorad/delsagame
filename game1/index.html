@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>بازی پیانو</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../game-shell.css" />
+  </head>
+  <body class="game-page game-piano">
+    <nav class="game-nav" aria-label="ناوبری بازی‌ها">
+      <div class="game-nav-inner">
+        <a class="game-brand" href="../index.html" aria-label="دنیای بازی دلسا و بابا">
+          <span class="game-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span><strong>دنیای بازی</strong><small>دلسا و بابا</small></span>
+        </a>
+        <div class="game-switcher">
+          <a class="game-switch is-active" href="../game1/index.html" aria-current="page">
+            <span aria-hidden="true">♫</span><b>پیانو</b>
+          </a>
+          <a class="game-switch" href="../game2/index.html">
+            <span aria-hidden="true">✦</span><b>حافظه</b>
+          </a>
+          <a class="game-switch" href="../game3/index.html">
+            <span aria-hidden="true">◆</span><b>پازل</b>
+          </a>
+        </div>
+        <a class="all-games-link" href="../index.html#games">
+          <span>همه بازی‌ها</span>
+          <span aria-hidden="true">←</span>
+        </a>
+      </div>
+    </nav>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="title-block">
+          <span class="kicker">Piano Arcade</span>
+          <h1>بازی پیانو</h1>
+        </div>
+
+        <div class="metrics" aria-label="امتیاز بازی">
+          <div class="metric">
+            <span>امتیاز</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="metric">
+            <span>ترکیب</span>
+            <strong id="combo">0</strong>
+          </div>
+          <div class="metric">
+            <span>دقت</span>
+            <strong id="accuracy">100%</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="control-strip" aria-label="کنترل‌های بازی">
+        <div class="segmented" role="group" aria-label="حالت اجرا">
+          <button class="segment is-active" type="button" data-mode="free">آزاد</button>
+          <button class="segment" type="button" data-mode="game">بازی</button>
+        </div>
+
+        <label class="field">
+          <span>آهنگ</span>
+          <select id="songSelect">
+            <option value="scale">تمرین نت‌ها</option>
+            <option value="twinkle">ستاره کوچک</option>
+            <option value="ode">تم شادی</option>
+          </select>
+        </label>
+
+        <label class="field slider-field">
+          <span>صدا</span>
+          <input id="volume" type="range" min="0" max="100" value="72" />
+        </label>
+
+        <label class="toggle">
+          <input id="sustain" type="checkbox" checked />
+          <span>کشیده</span>
+        </label>
+
+        <button class="primary-action" id="startGame" type="button">شروع</button>
+      </section>
+
+      <section class="play-area" aria-label="صفحه بازی">
+        <div class="stage-shell">
+          <canvas id="noteCanvas" width="1320" height="560" aria-label="نت‌های بازی"></canvas>
+          <div class="hit-line" aria-hidden="true"></div>
+        </div>
+
+        <div class="status-row" aria-live="polite">
+          <span id="statusText">آماده</span>
+          <span id="lastHit">-</span>
+        </div>
+
+        <div class="piano-wrap">
+          <div class="keyboard" id="keyboard" aria-label="کلاویه‌های پیانو"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

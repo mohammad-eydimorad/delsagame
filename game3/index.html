@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>پازل انیمه‌ای</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../game-shell.css" />
+  </head>
+  <body class="game-page game-puzzle">
+    <nav class="game-nav" aria-label="ناوبری بازی‌ها">
+      <div class="game-nav-inner">
+        <a class="game-brand" href="../index.html" aria-label="دنیای بازی دلسا و بابا">
+          <span class="game-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span><strong>دنیای بازی</strong><small>دلسا و بابا</small></span>
+        </a>
+        <div class="game-switcher">
+          <a class="game-switch" href="../game1/index.html">
+            <span aria-hidden="true">♫</span><b>پیانو</b>
+          </a>
+          <a class="game-switch" href="../game2/index.html">
+            <span aria-hidden="true">✦</span><b>حافظه</b>
+          </a>
+          <a class="game-switch is-active" href="../game3/index.html" aria-current="page">
+            <span aria-hidden="true">◆</span><b>پازل</b>
+          </a>
+        </div>
+        <a class="all-games-link" href="../index.html#games">
+          <span>همه بازی‌ها</span>
+          <span aria-hidden="true">←</span>
+        </a>
+      </div>
+    </nav>
+    <main class="app-shell">
+      <section class="top-bar" aria-label="وضعیت بازی">
+        <div>
+          <p class="eyebrow">پازل تصویری</p>
+          <h1>انیمه، گل و پروانه</h1>
+        </div>
+        <div class="stats" aria-live="polite">
+          <div class="stat">
+            <span>تلاش</span>
+            <strong id="moves">۰</strong>
+          </div>
+          <div class="stat">
+            <span>زمان</span>
+            <strong id="timer">۰۰:۰۰</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="game-layout">
+        <aside class="side-panel" aria-label="تنظیمات بازی">
+          <div class="panel-section">
+            <div class="section-head">
+              <span>تصویر</span>
+              <button class="icon-button" id="previewButton" type="button" aria-label="نمایش تصویر کامل">
+                <i data-lucide="image"></i>
+              </button>
+            </div>
+            <div class="image-picker" id="imagePicker"></div>
+          </div>
+
+          <div class="panel-section">
+            <span class="section-label">سختی</span>
+            <div class="segmented" role="group" aria-label="انتخاب سختی">
+              <button class="segment" type="button" data-size="3">۳×۳</button>
+              <button class="segment active" type="button" data-size="4">۴×۴</button>
+              <button class="segment" type="button" data-size="5">۵×۵</button>
+            </div>
+          </div>
+
+          <div class="actions" aria-label="فرمان‌های بازی">
+            <button class="primary-button" id="shuffleButton" type="button">
+              <i data-lucide="shuffle"></i>
+              <span>بهم بزن</span>
+            </button>
+            <button class="ghost-button" id="solveButton" type="button">
+              <i data-lucide="sparkles"></i>
+              <span>نمایش جواب</span>
+            </button>
+          </div>
+        </aside>
+
+        <section class="board-zone" aria-label="بازی پازل">
+          <div class="puzzle-stage">
+            <div class="board-shell">
+              <div class="stage-head">
+                <span>صفحه پازل</span>
+                <strong id="progress">۰/۱۶</strong>
+              </div>
+              <div class="board" id="board" aria-label="صفحه جایگذاری قطعه‌ها"></div>
+            </div>
+
+            <aside class="pieces-panel" aria-label="قطعه‌های بیرون صفحه">
+              <div class="section-head">
+                <span>قطعه‌ها</span>
+                <strong id="remainingPieces">۱۶</strong>
+              </div>
+              <div class="piece-tray" id="pieceTray"></div>
+            </aside>
+          </div>
+
+          <div class="current-image">
+            <img id="currentImage" alt="" />
+            <div>
+              <span id="imageType"></span>
+              <strong id="imageTitle"></strong>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog class="preview-dialog" id="previewDialog" aria-labelledby="previewTitle">
+      <div class="dialog-head">
+        <strong id="previewTitle">نمای کامل</strong>
+        <button class="icon-button" id="closePreview" type="button" aria-label="بستن">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <img id="previewImage" alt="" />
+    </dialog>
+
+    <div class="win-toast" id="winToast" role="status" aria-live="polite">
+      <i data-lucide="trophy"></i>
+      <span>پازل کامل شد</span>
+    </div>
+
+    <script src="game.js"></script>
+    <script async src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="window.lucide && window.lucide.createIcons()"></script>
+  </body>
+</html>
