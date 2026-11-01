@@ -16,9 +16,34 @@ const NOTES = [
   { name: "D5", label: "ر", code: "KeyL", key: "L", freq: 587.33, kind: "white", color: "#3f9d61" },
   { name: "D#5", label: "ر#", code: "KeyP", key: "P", freq: 622.25, kind: "black", color: "#e8a623" },
   { name: "E5", label: "می", code: "Semicolon", key: ";", freq: 659.25, kind: "white", color: "#6c5ce7" },
+  { name: "F5", label: "فا", code: "Quote", key: "'", freq: 698.46, kind: "white", color: "#1b8f8a" },
+  { name: "F#5", label: "فا#", code: "BracketLeft", key: "[", freq: 739.99, kind: "black", color: "#df6658" },
+  { name: "G5", label: "سل", code: "BracketRight", key: "]", freq: 783.99, kind: "white", color: "#3f9d61" },
+  { name: "G#5", label: "سل#", code: "Digit9", key: "9", freq: 830.61, kind: "black", color: "#e8a623" },
+  { name: "A5", label: "لا", code: "Digit0", key: "0", freq: 880.0, kind: "white", color: "#6c5ce7" },
+  { name: "A#5", label: "لا#", code: "Minus", key: "-", freq: 932.33, kind: "black", color: "#df6658" },
+  { name: "B5", label: "سی", code: "Equal", key: "=", freq: 987.77, kind: "white", color: "#e8a623" },
+];
+
+// Right-hand melody from the supplied Panda score; repeat each marked section.
+const pandaTheme = [
+  ["C5", 1], ["C5", 1], ["C5", 1], ["E5", 1],
+  ["D5", 1], ["D5", 1], ["D5", 1], ["F5", 1],
+  ["E5", 1], ["E5", 1], ["D5", 1], ["D5", 1],
+  ["C5", 4],
+];
+const pandaMiddle = [
+  ["E5", 1], ["E5", 1], ["E5", 1], ["E5", 1],
+  ["G5", 2], ["F5", 2],
+  ["D5", 1], ["D5", 1], ["D5", 1], ["D5", 1],
+  ["F5", 2], ["E5", 2],
 ];
 
 const SONGS = {
+  panda: {
+    bpm: 96,
+    sequence: [...pandaTheme, ...pandaTheme, ...pandaMiddle, ...pandaTheme, ...pandaMiddle, ...pandaTheme],
+  },
   scale: {
     bpm: 64,
     sequence: [
@@ -147,7 +172,7 @@ const keyElements = new Map();
 const heldCodes = new Set();
 
 const state = {
-  mode: "free",
+  mode: "learn",
   running: false,
   score: 0,
   combo: 0,
@@ -167,6 +192,7 @@ let lastCanvasHeight = 0;
 
 function buildKeyboard() {
   const whiteNotes = NOTES.filter((note) => note.kind === "white");
+  keyboard.style.setProperty("--white-count", whiteNotes.length);
   const whiteKeys = document.createElement("div");
   whiteKeys.className = "white-keys";
   whiteKeys.style.setProperty("--white-count", whiteNotes.length);
@@ -191,10 +217,6 @@ function createKey(note, className) {
   key.className = `key ${className}`;
   key.dataset.note = note.name;
   key.setAttribute("aria-label", `${note.label} ${note.name}`);
-  key.innerHTML = `
-    <span class="note-name">${note.label}</span>
-    <span class="key-label">${note.key}</span>
-  `;
 
   key.addEventListener("pointerdown", (event) => {
     event.preventDefault();
@@ -207,7 +229,10 @@ function createKey(note, className) {
     releaseNote(note.name);
   });
 
-  key.addEventListener("pointercancel", () => releaseNote(note.name));
+  key.addEventListener("pointercancel", () => {
+    cancelLessonHold();
+    releaseNote(note.name);
+  });
   key.addEventListener("lostpointercapture", () => releaseNote(note.name));
   keyElements.set(note.name, key);
   return key;
@@ -227,14 +252,14 @@ function ensureAudio() {
   }
 }
 
-function playNote(noteName, velocity = 1) {
+function playNote(noteName, velocity = 1, heldDuration = 0) {
   const note = noteByName.get(noteName);
   if (!note) return;
 
   ensureAudio();
 
   const now = audioContext.currentTime;
-  const duration = sustainControl.checked ? 1.18 : 0.58;
+  const duration = heldDuration || (sustainControl.checked ? 1.18 : 0.58);
   const filter = audioContext.createBiquadFilter();
   const envelope = audioContext.createGain();
   const outputLevel = 0.2 * velocity;
@@ -266,15 +291,38 @@ function playNote(noteName, velocity = 1) {
     oscillator.start(now);
     oscillator.stop(now + duration + 0.05);
   });
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    const releaseAt = audioContext.currentTime;
+    if (typeof envelope.gain.cancelAndHoldAtTime === "function") {
+      envelope.gain.cancelAndHoldAtTime(releaseAt);
+    } else {
+      const elapsed = Math.max(0, releaseAt - now);
+      const level = elapsed < 0.012
+        ? 0.0001 * Math.pow(outputLevel / 0.0001, elapsed / 0.012)
+        : outputLevel * Math.pow(0.0001 / outputLevel, Math.min(1, (elapsed - 0.012) / (duration - 0.012)));
+      envelope.gain.cancelScheduledValues(releaseAt);
+      envelope.gain.setValueAtTime(level, releaseAt);
+    }
+    envelope.gain.setTargetAtTime(0.0001, releaseAt, 0.025);
+  };
 }
 
+const lessonVoices = new Map();
 function pressNote(noteName) {
   const note = noteByName.get(noteName);
   if (!note) return;
 
-  playNote(noteName);
+  if (state.mode === "learn" && lesson.active && !lesson.preview && SONGS[songSelect.value].sequence[lesson.index][1] > 1) {
+    lessonVoices.get(noteName)?.();
+    lessonVoices.set(noteName, playNote(noteName, 1, lessonDuration() / 1000 + 0.3));
+  } else playNote(noteName);
   keyElements.get(noteName)?.classList.add("is-down");
   state.pulses.push({ noteName, startedAt: performance.now(), color: note.color });
+
+  if (state.mode === "learn") advanceLesson(noteName);
 
   if (state.mode === "game" && state.running) {
     hitGameNote(noteName);
@@ -282,10 +330,19 @@ function pressNote(noteName) {
 }
 
 function releaseNote(noteName) {
+  lessonVoices.get(noteName)?.();
+  lessonVoices.delete(noteName);
   keyElements.get(noteName)?.classList.remove("is-down");
+  if (state.mode === "learn") finishLessonHold(noteName);
 }
 
 function setMode(mode) {
+  stopPreview();
+  lesson.active = false;
+  if (state.running) stopGame();
+  clearLessonKeys();
+  startButton.textContent = "شروع";
+  document.body.classList.toggle("learning-mode", mode === "learn");
   state.mode = mode;
   modeButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.mode === mode);
@@ -294,7 +351,7 @@ function setMode(mode) {
   if (mode === "free" && state.running) {
     stopGame("آزاد");
   } else {
-    statusText.textContent = mode === "game" ? "بازی" : "آماده";
+    statusText.textContent = mode === "game" ? "تمرین ریتم" : "آماده";
   }
 }
 
@@ -316,7 +373,7 @@ function updateStats() {
 
 function makeSongNotes(songKey) {
   const song = SONGS[songKey] ?? SONGS.scale;
-  const beatLength = 60000 / song.bpm;
+  const beatLength = 60000 / (song.bpm * Number(document.querySelector("#tempo").value));
   let beat = 0;
 
   return song.sequence.map(([noteName, duration], index) => {
@@ -334,6 +391,9 @@ function makeSongNotes(songKey) {
 }
 
 function startGame() {
+  stopPreview();
+  if (state.mode === "learn") { toggleLesson(); return; }
+  if (state.mode === "free") { setMode("learn"); toggleLesson(); return; }
   ensureAudio();
 
   if (state.running) {
@@ -653,6 +713,12 @@ function bindEvents() {
   });
 
   songSelect.addEventListener("change", () => {
+    stopPreview();
+    lesson.active = false;
+    lesson.index = 0;
+    clearLessonKeys();
+    startButton.textContent = "شروع";
+    renderLesson();
     if (state.running) {
       stopGame("آهنگ");
     }
@@ -661,13 +727,175 @@ function bindEvents() {
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
   window.addEventListener("blur", () => {
+    cancelLessonHold();
+    lessonVoices.forEach(stop => stop());
+    lessonVoices.clear();
     heldCodes.clear();
     keyElements.forEach((key) => key.classList.remove("is-down"));
   });
 }
 
+const lesson = { active: false, index: 0, timer: null, preview: false, hold: null, holdTimer: null };
+const sequenceEl = document.querySelector("#noteSequence");
+// Keep the lesson beside the instrument, below the feedback and above the keys.
+document.querySelector(".piano-wrap").before(document.querySelector("#lessonPanel"));
+const listenButton = document.querySelector("#listen");
+function clearLessonKeys() {
+  cancelLessonHold();
+  keyElements.forEach(key => key.classList.remove("lesson-target"));
+}
+function cancelLessonHold() {
+  clearInterval(lesson.holdTimer);
+  lessonVoices.forEach(stop => stop());
+  lessonVoices.clear();
+  lesson.hold = null;
+  document.querySelector("#holdProgress").value = 0;
+}
+function lessonDuration() {
+  const song = SONGS[songSelect.value];
+  return song.sequence[lesson.index][1] * 60000 / (song.bpm * Number(document.querySelector("#tempo").value));
+}
+function finishLessonHold(name) {
+  const hold = lesson.hold;
+  if (!hold || hold.name !== name) return;
+  const elapsed = performance.now() - hold.start;
+  const tolerance = Math.max(120, hold.duration * 0.25);
+  cancelLessonHold();
+  if (elapsed < hold.duration - tolerance) {
+    state.combo = 0;
+    lastHit.textContent = "این نت چند ضرب است؛ کمی بیشتر نگه دار";
+    statusText.textContent = "کشش را دوباره تمرین کن";
+    updateStats();
+    return;
+  }
+  completeLessonNote();
+}
+function renderLesson() {
+  const sequence = SONGS[songSelect.value].sequence;
+  const current = sequence[lesson.index];
+  document.querySelector("#lessonProgress").max = sequence.length;
+  document.querySelector("#lessonProgress").value = lesson.index;
+  document.querySelector("#nextNote").textContent = current ? `${noteByName.get(current[0]).label} · \u2066${current[0]}\u2069` : "آفرین!";
+  document.querySelector("#noteHint").textContent = current ? `کلید \u2066${noteByName.get(current[0]).key}\u2069 · کشش ${current[1].toLocaleString("fa-IR")} ضرب` : "درس کامل شد؛ دوباره تمرین کن یا آهنگ دیگری انتخاب کن.";
+  document.querySelector("#lessonSummary").textContent = `${lesson.index.toLocaleString("fa-IR")} از ${sequence.length.toLocaleString("fa-IR")} نت · ملودی دست راست`;
+  sequenceEl.replaceChildren(...sequence.map(([name, beats], index) => {
+    const chip = document.createElement("span");
+    chip.className = `note-chip${index === lesson.index ? " current" : index < lesson.index ? " completed" : ""}`;
+    chip.textContent = `${noteByName.get(name).label} \u2066${name}\u2069 · ${beats.toLocaleString("fa-IR")}`;
+    if (index === lesson.index) chip.setAttribute("aria-current", "step");
+    return chip;
+  }));
+  const activeChip = sequenceEl.querySelector('[aria-current="step"]');
+  if (activeChip) {
+    sequenceEl.scrollTo({
+      left: activeChip.offsetLeft - (sequenceEl.clientWidth - activeChip.offsetWidth) / 2,
+      behavior: "instant",
+    });
+  }
+  clearLessonKeys();
+  if (current && (lesson.active || lesson.preview)) keyElements.get(current[0]).classList.add("lesson-target");
+}
+function toggleLesson() {
+  if (lesson.active) {
+    lesson.active = false;
+    clearLessonKeys();
+    startButton.textContent = "ادامه";
+    statusText.textContent = "تمرین متوقف شد";
+    return;
+  }
+  if (lesson.index >= SONGS[songSelect.value].sequence.length) lesson.index = 0;
+  if (lesson.index === 0) resetStats();
+  lesson.active = true;
+  startButton.textContent = "مکث";
+  statusText.textContent = "کلاویهٔ روشن را بنواز؛ درس منتظر توست";
+  renderLesson();
+}
+function advanceLesson(name) {
+  if (!lesson.active || lesson.preview) return;
+  if (lesson.hold) return;
+  state.attempts++;
+  if (name !== SONGS[songSelect.value].sequence[lesson.index][0]) {
+    state.combo = 0;
+    lastHit.textContent = "دوباره تلاش کن؛ کلاویهٔ روشن راهنمای توست";
+    updateStats();
+    return;
+  }
+  if (SONGS[songSelect.value].sequence[lesson.index][1] <= 1) {
+    completeLessonNote();
+    return;
+  }
+  const duration = lessonDuration();
+  lesson.hold = { name, start: performance.now(), duration };
+  statusText.textContent = "نت چندضربی است؛ تا پر شدن نوار نگه دار";
+  document.querySelector("#holdProgress").max = duration;
+  lesson.holdTimer = setInterval(() => {
+    if (!lesson.hold) return;
+    const elapsed = performance.now() - lesson.hold.start;
+    document.querySelector("#holdProgress").value = Math.min(elapsed, duration);
+    if (elapsed >= duration) {
+      cancelLessonHold();
+      completeLessonNote();
+    }
+  }, 30);
+}
+function completeLessonNote() {
+  state.hits++;
+  state.score++;
+  state.combo++;
+  lesson.index++;
+  lastHit.textContent = "درست بود!";
+  statusText.textContent = "نت بعدی را بنواز؛ فقط نت‌های چندضربی نیاز به نگه‌داشتن دارند";
+  updateStats();
+  if (lesson.index === SONGS[songSelect.value].sequence.length) {
+    if (document.querySelector("#repeatLesson").checked) lesson.index = 0;
+    else {
+      lesson.active = false;
+      startButton.textContent = "تمرین دوباره";
+      statusText.textContent = "درس کامل شد";
+    }
+  }
+  renderLesson();
+}
+function stopPreview() {
+  clearTimeout(lesson.timer);
+  if (!lesson.preview) return;
+  lesson.preview = false;
+  lesson.index = lesson.savedIndex;
+  listenButton.textContent = "شنیدن نمونه";
+  statusText.textContent = "آمادهٔ تمرین";
+  renderLesson();
+}
+function previewLesson() {
+  if (lesson.preview) { stopPreview(); return; }
+  if (state.running) stopGame();
+  lesson.active = false;
+  startButton.textContent = "شروع";
+  lesson.savedIndex = lesson.index;
+  lesson.index = 0;
+  lesson.preview = true;
+  listenButton.textContent = "توقف نمونه";
+  statusText.textContent = "به ملودی گوش بده و کلاویهٔ روشن را دنبال کن";
+  ensureAudio();
+  function next() {
+    if (!lesson.preview) return;
+    const song = SONGS[songSelect.value];
+    const item = song.sequence[lesson.index];
+    if (!item) { stopPreview(); return; }
+    renderLesson();
+    playNote(item[0], 1, item[1] * 60 / (song.bpm * Number(document.querySelector("#tempo").value)));
+    lesson.timer = setTimeout(() => { lesson.index++; next(); }, item[1] * 60000 / (song.bpm * Number(document.querySelector("#tempo").value)));
+  }
+  next();
+}
+listenButton.addEventListener("click", previewLesson);
+document.querySelector("#tempo").addEventListener("change", () => {
+  cancelLessonHold();
+  stopPreview();
+  if (state.running) stopGame("سرعت تغییر کرد؛ تمرین را دوباره شروع کن");
+});
 buildKeyboard();
 bindEvents();
+renderLesson();
 updateStats();
 animationFrame = requestAnimationFrame(drawFrame);
 

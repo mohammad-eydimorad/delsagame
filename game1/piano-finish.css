@@ -1,0 +1,162 @@
+/* Compact practice guide directly above the instrument. */
+.game-piano .lesson-panel {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(160px, auto) minmax(0, 1fr) auto;
+  gap: 10px 18px;
+  padding: 16px;
+  margin: 0;
+  border-radius: 16px;
+  background: linear-gradient(120deg, #18262b, #131d24);
+  border-color: #a58c5140;
+}
+.game-piano:not(.learning-mode) .lesson-panel { display: none; }
+.game-piano .lesson-focus { grid-column: 1; grid-row: 1 / 3; flex-direction: row; flex-wrap: wrap; gap: 5px 12px; padding: 10px 14px; background: #ffffff05; text-align: right; }
+.game-piano .lesson-focus > span:first-child { font-size: 11px; color: #b7b9b6; }
+.game-piano .lesson-focus strong { font-size: 24px; color: #e4c996; }
+.game-piano #noteHint { flex-basis: 100%; font-size: 11px; }
+.game-piano .lesson-intro { grid-column: 2; grid-row: 1; align-self: center; font-size: 12px; }
+.game-piano .lesson-intro summary { cursor: pointer; color: #c7bcaa; }
+.game-piano .lesson-intro p { font-size: 12px; margin: 10px 0; }
+.game-piano .lesson-repeat { grid-column: 3; grid-row: 1; margin: 0; align-self: center; font-size: 12px; }
+.game-piano .lesson-repeat { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; cursor: pointer; }
+.game-piano .lesson-repeat input { width: 16px; height: 16px; min-width: 16px; min-height: 16px; margin: 0; accent-color: #d4b67d; }
+.game-piano .hold-guide { grid-column: 2 / 4; grid-row: 2; font-size: 11px; line-height: 1.6; }
+.game-piano .lesson-panel progress { display: block; height: 5px; margin-top: 5px; accent-color: #d4b67d; }
+.game-piano #lessonProgress { grid-column: 1 / -1; grid-row: 5; margin: 0; height: 3px; }
+.game-piano #lessonSummary { grid-column: 1 / -1; grid-row: 4; margin: 0; font-size: 11px; color: #aeb9ba; }
+.game-piano .note-sequence { position: relative; grid-column: 1 / -1; grid-row: 3; min-width: 0; padding: 3px 0 7px; gap: 6px; scrollbar-width: thin; scrollbar-color: #756647 transparent; }
+.game-piano .note-chip { padding: 9px 12px; border-radius: 8px; font-size: 12px; border-color: #ffffff1c; }
+.game-piano .note-chip.current { background: #e4c996; border-color: #e4c996; color: #29241c; }
+@media (max-width: 650px) {
+  .game-piano .lesson-panel { grid-template-columns: minmax(0, 1fr) auto; gap: 9px; padding: 12px; }
+  .game-piano .lesson-focus { grid-column: 1 / -1; grid-row: 1; justify-content: flex-start; padding: 6px 10px; }
+  .game-piano #noteHint { flex-basis: auto; }
+  .game-piano .lesson-intro { grid-column: 1; grid-row: 2; }
+  .game-piano .lesson-repeat { grid-column: 2; grid-row: 2; font-size: 11px; }
+  .game-piano .hold-guide { grid-column: 1 / -1; grid-row: 3; }
+  .game-piano .note-sequence { grid-row: 4; }
+  .game-piano #lessonSummary { grid-row: 5; }
+  .game-piano #lessonProgress { grid-row: 6; }
+}
+/* Ebony cabinet, ivory naturals and narrow raised accidentals. */
+.game-piano .piano-wrap {
+  padding: 34px 18px 22px;
+  border: 1px solid #61513a;
+  border-top: 3px solid #bda16c;
+  border-radius: 14px 14px 22px 22px;
+  background: linear-gradient(180deg, #303238 0, #111216 17px, #090a0d 30px, #1e2026 100%);
+  box-shadow: 0 22px 48px #0006, inset 0 1px #ffffff1f, inset 0 -5px 8px #0008;
+  overflow: hidden;
+}
+.game-piano .keyboard {
+  width: 97.5%;
+  margin-left: 0;
+  margin-right: auto;
+  min-width: 0;
+  height: clamp(156px, 20vw, 232px);
+  border-top: 4px solid #722e39;
+  touch-action: none;
+}
+.game-piano .white-keys { gap: 2px; }
+.game-piano .key { min-width: 0; min-height: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.game-piano .white-key {
+  height: 100%;
+  padding: 0 2px 15px;
+  gap: 8px;
+  color: #514c42;
+  background: linear-gradient(90deg, #ded9cc 0%, #f6f2e8 7%, #fffdf6 48%, #f6f2e9 91%, #d9d3c5 100%);
+  border: 1px solid #c9c1ae;
+  border-top: 0;
+  border-radius: 0 0 5px 5px;
+  box-shadow: inset 0 -7px 0 #d6cebd, inset 0 -9px 2px #fff8ed, 0 5px 3px #0009;
+  transition: filter 120ms, box-shadow 100ms, transform 100ms;
+}
+.game-piano .black-key {
+  width: calc(46% / var(--white-count));
+  height: 57%;
+  padding: 0 1px 12px;
+  gap: 6px;
+  color: #d9cfb7;
+  background: linear-gradient(90deg, #08090c, #32343a 12%, #202228 24%, #15171d 77%, #050609 94%);
+  border: 1px solid #050609;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+  box-shadow: inset 0 -7px 0 #060709, inset 0 -9px 1px #43454b, 2px 6px 4px #0009;
+  transition: filter 120ms, box-shadow 100ms, transform 100ms;
+}
+.game-piano .key .note-name { font-size: clamp(9px, 1.1vw, 14px); font-weight: 600; white-space: nowrap; }
+.game-piano .key .key-label { min-width: 0; width: 21px; height: 20px; padding: 0; border-radius: 4px; font-size: 10px; background: transparent; opacity: .6; }
+.game-piano .black-key .key-label { color: #d9cfb7; }
+.game-piano .white-key .key-label { color: #716653; opacity: .85; }
+.game-piano .white-key.is-down { transform: translateY(3px); background: linear-gradient(90deg, #d7d0bf, #f0e9d9 45%, #e1d9c6); box-shadow: inset 0 -3px #c2b79f, 0 2px 2px #0008; }
+.game-piano .black-key.is-down { transform: translate(-50%, 3px); filter: brightness(1.3); box-shadow: inset 0 -3px #030405, 1px 2px 2px #0008; }
+.game-piano .key.lesson-target { outline: 2px solid #63dac5; outline-offset: -2px; }
+.game-piano .white-key.lesson-target {
+  box-shadow: inset 0 -7px 0 #d6cebd, inset 0 -9px 2px #fff8ed, 0 5px 3px #0009;
+}
+.game-piano .black-key.lesson-target {
+  box-shadow: inset 0 -7px 0 #060709, inset 0 -9px 1px #43454b, 2px 6px 4px #0009;
+}
+.game-piano .white-key.lesson-target.is-down { box-shadow: inset 0 -3px #c2b79f, 0 2px 2px #0008; }
+.game-piano .black-key.lesson-target.is-down { box-shadow: inset 0 -3px #030405, 1px 2px 2px #0008; }
+.game-piano .key:focus-visible { outline: 2px solid #c5a56b; outline-offset: -4px; }
+.game-piano .control-strip { gap: 14px; padding: 18px; background: linear-gradient(135deg, #20222e, #131620); border: 1px solid #ffffff14; box-shadow: 0 10px 32px #0002; }
+.game-piano .segmented { grid-template-columns: repeat(3, auto); gap: 3px; padding: 5px; border-radius: 13px; background: #080b1280; }
+.game-piano .segment { min-height: 42px; padding: 0 16px; border: 1px solid transparent; font-weight: 600; transition: background 160ms, color 160ms, box-shadow 160ms; }
+.game-piano .segment.is-active { color: #f5e6c4; border-color: #b99a5d66; background: linear-gradient(145deg, #55482f, #302b22); box-shadow: inset 0 1px #e8ce9029, 0 3px 9px #0003; }
+.game-piano #listen { color: #e6d3ad; border: 1px solid #b99a5d55; background: #b99a5d0a; }
+.game-piano .primary-action { min-height: 44px; border: 1px solid #dcc28e; color: #29241b; background: linear-gradient(135deg, #eedbb1, #b99a5d); box-shadow: 0 6px 18px #b99a5d22, inset 0 1px #fff8; }
+.game-piano select { min-height: 42px; border-color: #ffffff26; background: #0e111a; }
+.game-piano button:focus-visible, .game-piano select:focus-visible { outline: 2px solid #e8ce90; outline-offset: 3px; }
+.game-piano .key:focus-visible { outline-offset: -4px; }
+@media (hover: hover) {
+  .game-piano .white-key:hover { filter: brightness(.97); }
+  .game-piano .black-key:hover { filter: brightness(1.2); }
+  .game-piano .segment:hover { color: #fff0d1; background-color: #b99a5d1c; }
+  .game-piano .primary-action:hover { background: linear-gradient(135deg, #f5e6c4, #ceb079); box-shadow: 0 8px 24px #b99a5d33; }
+}
+@media (max-width: 650px) {
+  .game-piano .piano-wrap { padding: 23px 7px 14px; border-radius: 10px 10px 16px 16px; }
+  .game-piano .white-keys { gap: 1px; }
+  .game-piano .white-key { padding-bottom: 12px; }
+  .game-piano .black-key { padding-bottom: 10px; }
+  .game-piano .key .key-label { display: none; }
+  .game-piano .black-key .note-name { font-size: 8px; letter-spacing: -.5px; }
+  .game-piano .control-strip { padding: 12px; gap: 10px; }
+  .game-piano .segmented { width: 100%; }
+  .game-piano .segment { padding-inline: 9px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .game-piano button { transition: none; } }
+
+/* Two deliberate rows: lesson selection, then playback controls. */
+.game-piano .control-strip {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.5fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(140px, .8fr);
+  grid-template-areas: "modes song tempo listen" "sustain volume volume start";
+  align-items: end;
+  gap: 14px 16px;
+}
+.game-piano .control-strip > .segmented { grid-area: modes; min-width: 0; min-height: 52px; align-items: center; }
+.game-piano .control-strip > .field { min-width: 0; }
+.game-piano .control-strip > .field:has(#songSelect) { grid-area: song; }
+.game-piano .control-strip > .field:has(#tempo) { grid-area: tempo; }
+.game-piano #listen { grid-area: listen; min-height: 44px; }
+.game-piano .control-strip > .slider-field { grid-area: volume; height: 44px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; }
+.game-piano .slider-field input { margin: 0; min-width: 0; }
+.game-piano .control-strip > .toggle { grid-area: sustain; min-height: 44px; padding: 0 10px; justify-content: flex-start; }
+.game-piano .control-strip .toggle input { width: 18px; height: 18px; min-width: 18px; min-height: 18px; margin: 0; accent-color: #d4b67d; }
+.game-piano #startGame { grid-area: start; width: 100%; }
+.game-piano .control-strip select { min-height: 44px; }
+@media (max-width: 900px) {
+  .game-piano .control-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: "modes modes" "song tempo" "listen start" "sustain volume";
+    align-items: end;
+  }
+}
+@media (max-width: 380px) {
+  .game-piano .control-strip { gap: 10px 8px; }
+  .game-piano .control-strip .segment { padding-inline: 5px; font-size: 11px; }
+}

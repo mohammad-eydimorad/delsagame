@@ -8,16 +8,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="دنیای بازی" />
-    <title>بازی پیانو</title>
+    <title>آموزش پیانو</title>
     <link rel="manifest" href="../manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png" />
     <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
     <link rel="stylesheet" href="../fonts.css" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="../game-shell.css" />
+    <link rel="stylesheet" href="piano-finish.css" />
     <script src="../pwa.js" defer></script>
   </head>
-  <body class="game-page game-piano">
+  <body class="game-page game-piano learning-mode">
     <nav class="game-nav" aria-label="ناوبری بازی‌ها">
       <div class="game-nav-inner">
         <a class="game-brand" href="../index.html" aria-label="دنیای بازی دلسا و بابا">
@@ -44,17 +45,17 @@
     <main class="app-shell">
       <header class="topbar">
         <div class="title-block">
-          <span class="kicker">Piano Arcade</span>
-          <h1>بازی پیانو</h1>
+          <span class="kicker">قدم‌به‌قدم با موسیقی</span>
+          <h1>آموزش پیانو</h1>
         </div>
 
         <div class="metrics" aria-label="امتیاز بازی">
           <div class="metric">
-            <span>امتیاز</span>
+            <span>نت‌های درست</span>
             <strong id="score">0</strong>
           </div>
           <div class="metric">
-            <span>ترکیب</span>
+            <span>پشت سر هم</span>
             <strong id="combo">0</strong>
           </div>
           <div class="metric">
@@ -66,19 +67,26 @@
 
       <section class="control-strip" aria-label="کنترل‌های بازی">
         <div class="segmented" role="group" aria-label="حالت اجرا">
-          <button class="segment is-active" type="button" data-mode="free">آزاد</button>
-          <button class="segment" type="button" data-mode="game">بازی</button>
+          <button class="segment is-active" type="button" data-mode="learn">یادگیری</button>
+          <button class="segment" type="button" data-mode="free">نواختن آزاد</button>
+          <button class="segment" type="button" data-mode="game">تمرین ریتم</button>
         </div>
 
         <label class="field">
           <span>آهنگ</span>
           <select id="songSelect">
+            <option value="panda">پاندا</option>
             <option value="scale">تمرین نت‌ها</option>
             <option value="twinkle">ستاره کوچک</option>
             <option value="ode">تم شادی</option>
           </select>
         </label>
 
+        <label class="field">
+          <span>سرعت تمرین</span>
+          <select id="tempo"><option value="0.5">آرام · ۵۰٪</option><option value="0.75" selected>متوسط · ۷۵٪</option><option value="1">سرعت اصلی</option></select>
+        </label>
+        <button class="segment" id="listen" type="button">شنیدن نمونه</button>
         <label class="field slider-field">
           <span>صدا</span>
           <input id="volume" type="range" min="0" max="100" value="72" />
@@ -92,6 +100,19 @@
         <button class="primary-action" id="startGame" type="button">شروع</button>
       </section>
 
+      <section class="lesson-panel" id="lessonPanel" aria-label="درس پیانو">
+        <details class="lesson-intro"><summary>راهنمای تمرین و انگشت‌گذاری</summary>
+          <p>شروع را بزن و کلاویهٔ روشن را بنواز. نت‌های تک‌ضربی و کوتاه‌تر با یک بار زدن پذیرفته می‌شوند. برای نت‌های چندضربی، کلاویه را تا پر شدن نوار نگه دار؛ درس خودکار به نت بعد می‌رود.</p>
+          <p>انگشت‌ها: شست ۱، اشاره ۲، میانی ۳، حلقه ۴، کوچک ۵. مچ را راحت نگه دار. تمرین گام را با شست روی دو آغاز کن؛ بعد از می، شست را روی فا بگذار.</p></details>
+        <div class="lesson-focus" aria-live="polite"><span>نت بعدی</span><strong id="nextNote">—</strong><span id="noteHint">برای آغاز، شروع را بزن</span></div>
+        <label class="lesson-repeat"><input type="checkbox" id="repeatLesson" /> تکرار خودکار درس</label>
+        <label class="hold-guide">کشش نت‌های چندضربی؛ تا پر شدن نوار نگه دار
+          <progress id="holdProgress" max="1" value="0" aria-label="مدت نگه‌داشتن نت"></progress>
+        </label>
+        <progress id="lessonProgress" max="1" value="0" aria-label="پیشرفت درس"></progress>
+        <p id="lessonSummary"></p>
+        <div id="noteSequence" class="note-sequence" aria-label="نت‌های آهنگ"></div>
+      </section>
       <section class="play-area" aria-label="صفحه بازی">
         <div class="stage-shell">
           <canvas id="noteCanvas" width="1320" height="560" aria-label="نت‌های بازی"></canvas>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "delsa-game-v2";
+const CACHE_NAME = "delsa-game-v26";
 
 const PRECACHE_URLS = [
   "./",
@@ -18,6 +18,7 @@ const PRECACHE_URLS = [
   "./game1/",
   "./game1/index.html",
   "./game1/styles.css",
+  "./game1/piano-finish.css",
   "./game1/app.js",
   "./game2/",
   "./game2/index.html",
